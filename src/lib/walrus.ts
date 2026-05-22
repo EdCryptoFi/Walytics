@@ -1,8 +1,5 @@
 import type { BlobInfo, WalrusMetrics } from "@/types"
 
-const WALRUS_PACKAGE_ID = process.env.WALRUS_PACKAGE_ID || ""
-const USE_LIVE_DATA = !!WALRUS_PACKAGE_ID
-
 const MOCK_PUBLISHERS = [
   "0x7b8f3a2c9d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7",
   "0xa1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
@@ -52,11 +49,6 @@ export async function queryWalrusBlobs(
     blobs: page,
     nextCursor: end < mockBlobs.length ? String(end) : undefined,
   }
-}
-
-function countBlobsInLastDays(blobs: BlobInfo[], days: number): number {
-  const cutoff = Math.floor(Date.now() / 1000) - days * 86400
-  return blobs.filter((b) => b.timestamp >= cutoff).length
 }
 
 export async function getAggregatedMetrics(): Promise<WalrusMetrics> {

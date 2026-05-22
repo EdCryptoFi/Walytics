@@ -1,33 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { OverviewCards } from "@/components/Dashboard/OverviewCards"
 import { BlobsChart } from "@/components/Dashboard/BlobsChart"
 import { TopPublishers } from "@/components/Dashboard/TopPublishers"
 import { StorageDistribution } from "@/components/Dashboard/StorageDistribution"
-import type { WalrusMetrics } from "@/lib/walrus"
 import { TatumStatus } from "@/components/Dashboard/TatumStatus"
+import { useAnalytics } from "@/hooks/useAnalytics"
 
 export default function DashboardPage() {
-  const [metrics, setMetrics] = useState<WalrusMetrics | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function fetchMetrics() {
-      try {
-        const res = await fetch("/api/analytics")
-        if (!res.ok) throw new Error(await res.text())
-        const data = await res.json()
-        setMetrics(data)
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to load analytics")
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchMetrics()
-  }, [])
+  const { metrics, loading, error } = useAnalytics()
 
   return (
     <div className="space-y-6">

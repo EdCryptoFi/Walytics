@@ -1,82 +1,21 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useChat } from "@/hooks/useChat"
 import { Send, Bot, User, FileText } from "lucide-react"
-import type { ChatMessage } from "@/types"
 
 export function ChatInterface() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      role: "assistant",
-      content:
-        'Hi! I\'m Walytics AI. Ask me anything about Walrus storage analytics. For example:\n\n- **"Who is the top publisher this week?"**\n- **"What\'s the average blob size?"**\n- **"Generate a weekly report"**\n- **"How is storage usage trending?"**',
-    },
-  ])
-  const [input, setInput] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [generatingReport, setGeneratingReport] = useState(false)
-  const endRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
-
-  async function handleSend() {
-    if (!input.trim() || loading) return
-
-    const userMsg: ChatMessage = { role: "user", content: input }
-    setMessages((prev) => [...prev, userMsg])
-    setInput("")
-    setLoading(true)
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      })
-      const data = await res.json()
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: data.response },
-      ])
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content: "Sorry, I couldn't process that request. Please try again.",
-        },
-      ])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleGenerateReport() {
-    setGeneratingReport(true)
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "Generate a report", generateReport: true }),
-      })
-      const data = await res.json()
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: `📊 **Weekly Analytics Report**\n\n${data.response}` },
-      ])
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Sorry, report generation failed." },
-      ])
-    } finally {
-      setGeneratingReport(false)
-    }
-  }
+  const {
+    messages,
+    input,
+    setInput,
+    loading,
+    generatingReport,
+    handleSend,
+    handleGenerateReport,
+    endRef,
+  } = useChat()
 
   return (
     <Card className="flex h-[600px] flex-col">

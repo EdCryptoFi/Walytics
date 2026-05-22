@@ -1,37 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
+import { useTatumStatus } from "@/hooks/useTatumStatus"
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react"
 
 export function TatumStatus() {
-  const [status, setStatus] = useState<"loading" | "connected" | "error">("loading")
-  const [blockHeight, setBlockHeight] = useState<string | null>(null)
-
-  useEffect(() => {
-    async function check() {
-      try {
-        const res = await fetch("/api/tatum", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            method: "sui_getLatestCheckpointSequenceNumber",
-            params: [],
-          }),
-        })
-        const json = await res.json()
-        if (json.result) {
-          setBlockHeight(Number(json.result).toLocaleString())
-          setStatus("connected")
-        } else {
-          setStatus("error")
-        }
-      } catch {
-        setStatus("error")
-      }
-    }
-    check()
-  }, [])
+  const { status, blockHeight } = useTatumStatus()
 
   return (
     <Card className="border-green-200 dark:border-green-900">
