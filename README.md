@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Walytics — Walrus Storage Analytics
+
+**Walytics** is a real-time analytics dashboard for [Walrus](https://walrus.xyz) decentralized storage on [Sui](https://sui.io), powered by [Tatum](https://tatum.io).
+
+Built for the [Tatum x Walrus Hackathon](https://tatum.io/tatum-x-walrus-hackathon).
+
+## Features
+
+- **Dashboard** — Real-time metrics: total blobs, storage used, publishers, trends
+- **Blob Explorer** — Browse and search blobs stored on Walrus
+- **AI Analytics Chat** — Ask questions in plain English about Walrus storage data (powered by Gemini 2.0 Flash)
+- **Automated Reports** — Generate weekly analytics reports via AI
+- **Walrus Dogfooding** — Analytics snapshots can be stored back on Walrus
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org) (App Router, Turbopack)
+- [TypeScript](https://typescriptlang.org)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [Tatum SDK](https://tatum.io) — Sui RPC endpoints
+- [Google Gemini 2.0 Flash](https://ai.google.dev) — AI chat & reports (free tier)
+- [Lucide](https://lucide.dev) — Icons
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20.9+
+- [Tatum API Key](https://dashboard.tatum.io) (free)
+- [Gemini API Key](https://aistudio.google.com) (free)
+
+### Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.local.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Fill in your API keys in `.env.local`:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+TATUM_API_KEY=your_tatum_api_key
+GEMINI_API_KEY=your_gemini_api_key
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Run
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Build
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+```
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/
+│   ├── api/
+│   │   ├── analytics/     # Walrus metrics API
+│   │   ├── blobs/         # Walrus blob list API
+│   │   ├── chat/          # AI chat API
+│   │   └── tatum/         # Tatum RPC proxy
+│   ├── chat/              # AI Analytics chat page
+│   ├── explorer/          # Blob Explorer page
+│   ├── page.tsx           # Dashboard (home)
+│   └── layout.tsx         # Root layout with sidebar
+├── components/
+│   ├── Chat/              # Chat interface
+│   ├── Dashboard/         # Overview cards, charts
+│   ├── Explorer/          # Blob table
+│   ├── Layout/            # Sidebar navigation
+│   └── ui/                # Button, Card components
+├── lib/
+│   ├── tatum.ts           # Tatum RPC client
+│   ├── gemini.ts          # Gemini AI client
+│   ├── walrus.ts          # Walrus data helpers
+│   └── utils.ts           # Utility functions
+└── types/                 # TypeScript types
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Hackathon Submission
+
+- **Demo Video:** 2–3 min walkthrough
+- **GitHub Repo:** [Link to your repo]
+- **Team:** Solo
+- **Built With:** Tatum Sui RPC + Walrus Storage + Gemini AI
+
+## License
+
+MIT
