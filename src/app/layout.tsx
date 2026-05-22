@@ -1,71 +1,73 @@
-import type { Metadata } from "next"
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import { Sidebar } from "@/components/Layout/Sidebar"
+import type { Metadata } from "next";
+import {
+  Archivo_Black,
+  Space_Grotesk,
+  JetBrains_Mono,
+  Playfair_Display,
+  Crimson_Pro,
+} from "next/font/google";
+import "./globals.css";
+import { Nav } from "@/components/Layout/Nav";
+import { ThemeProvider } from "@/components/Layout/ThemeProvider";
+import { TweaksPanel } from "@/components/TweaksPanel";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivoBlack = Archivo_Black({
+  weight: "400",
+  variable: "--font-archivo-black",
   subsets: ["latin"],
-})
+});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const spaceGrotesk = Space_Grotesk({
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
-})
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  weight: ["400", "500", "700", "800"],
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+});
+
+const playfairDisplay = Playfair_Display({
+  weight: ["700", "900"],
+  variable: "--font-playfair-display",
+  subsets: ["latin"],
+});
+
+const crimsonPro = Crimson_Pro({
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-crimson-pro",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
-  title: "Walytics — Walrus Storage Analytics",
+  title: "Walytics — The Game is a Blob",
   description:
-    "Real-time analytics dashboard for Walrus decentralized storage on Sui. Explore blobs, analyze patterns, and get AI-powered insights.",
-}
+    "Real-time analytics dashboard for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers.",
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-    >
-      <body className="flex min-h-screen bg-zinc-50 dark:bg-zinc-950">
-        <Sidebar />
-        <main className="flex flex-1 flex-col overflow-auto">
-          <div className="flex-1 p-6 lg:p-8">
-            {children}
+    <html lang="en" className={[
+      archivoBlack.variable,
+      spaceGrotesk.variable,
+      jetbrainsMono.variable,
+      playfairDisplay.variable,
+      crimsonPro.variable,
+    ].join(" ")}>
+      <body>
+        <ThemeProvider>
+          <div className="app">
+            <Nav/>
+            <main>
+              {children}
+            </main>
+            <TweaksPanel/>
           </div>
-          <footer className="border-t border-zinc-200 px-6 py-4 text-center text-xs text-zinc-400 dark:border-zinc-800 lg:px-8">
-            Created by{" "}
-            <a
-              href="https://x.com/EdCriptoFi"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
-            >
-              ED
-            </a>{" "}
-            · Built for{" "}
-            <a
-              href="https://tatum.io/tatum-x-walrus-hackathon"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
-            >
-              Tatum x Walrus Hackathon
-            </a>
-            ·{" "}
-            <a
-              href="https://github.com/EdCryptoFi/Walytics"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
-            >
-              GitHub
-            </a>
-          </footer>
-        </main>
+        </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

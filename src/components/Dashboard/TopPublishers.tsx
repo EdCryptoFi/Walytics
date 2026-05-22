@@ -1,47 +1,69 @@
-"use client"
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatBytes, shortenAddress } from "@/lib/utils"
-import type { WalrusMetrics } from "@/lib/walrus"
+import { formatBytes, shortenAddress } from "@/lib/utils";
+import type { WalrusMetrics } from "@/lib/walrus";
 
 interface TopPublishersProps {
-  publishers: WalrusMetrics["topPublishers"]
+  publishers: WalrusMetrics["topPublishers"];
 }
 
+const BADGES = ["PRIME SUSPECT", "REPEAT OFFENDER", "RELIABLE", "RISING", "UNDER WATCH", "COOLING"];
+const TRENDS = [12, 4, -2, 18, 1, -7];
+
 export function TopPublishers({ publishers }: TopPublishersProps) {
-  const maxCount = Math.max(...publishers.map((p) => p.count), 1)
+  const rows = publishers.slice(0, 6).map((p, i) => ({
+    label: p.label ?? "Unknown",
+    addr: shortenAddress(p.address),
+    blobs: p.count,
+    size: formatBytes(p.totalSize),
+    trend: TRENDS[i] ?? 0,
+    badge: BADGES[i] ?? "OBSERVED",
+  }));
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-sm font-medium">Top Publishers</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {publishers.slice(0, 5).map((pub, i) => (
-            <div key={pub.address} className="space-y-1">
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-zinc-400">#{i + 1}</span>
-                  <span className="font-mono text-xs text-zinc-600 dark:text-zinc-400">
-                    {shortenAddress(pub.address)}
-                  </span>
-                </div>
-                <span className="font-medium">{pub.count} blobs</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 flex-1 rounded-full bg-zinc-100 dark:bg-zinc-800">
-                  <div
-                    className="h-2 rounded-full bg-blue-500"
-                    style={{ width: `${(pub.count / maxCount) * 100}%` }}
-                  />
-                </div>
-                <span className="text-xs text-zinc-400">{formatBytes(pub.totalSize)}</span>
-              </div>
+    <div>
+      {rows.map((r, i) => (
+        <div key={i} style={{
+          display: "grid",
+          gridTemplateColumns: "32px 1fr 120px 70px",
+          alignItems: "center",
+          gap: 14,
+          padding: "12px 4px",
+          borderTop: i === 0 ? "2.5px solid var(--ink)" : "2px dashed rgba(0,0,0,0.25)",
+          borderBottom: i === rows.length - 1 ? "2.5px solid var(--ink)" : "none",
+        }}>
+          <div style={{
+            width: 30, height: 30,
+            border: "2.5px solid var(--ink)",
+            background: i === 0 ? "var(--gold)" : i === 1 ? "var(--mint)" : i === 2 ? "var(--burgundy)" : "var(--paper-2)",
+            color: i === 2 ? "var(--tusk)" : "var(--ink)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontFamily: "var(--font-display)", fontWeight: 900, fontSize: 14,
+          }}>{i+1}</div>
+          <div>
+            <div style={{ fontFamily: "var(--font-display)", fontSize: 17, lineHeight: 1.1 }}>{r.label}</div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 3 }}>
+              <span className="mono" style={{ fontSize: 10, opacity: 0.55 }}>{r.addr}</span>
+              <span className="tag" style={{ fontSize: 9, padding: "2px 6px",
+                background: r.badge === "PRIME SUSPECT" ? "var(--gold)" :
+                            r.badge === "RISING" ? "var(--mint)" :
+                            r.badge === "UNDER WATCH" ? "var(--burgundy)" : "var(--paper-2)",
+                color: r.badge === "UNDER WATCH" ? "var(--tusk)" : "var(--ink)" }}>{r.badge}</span>
             </div>
-          ))}
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div className="mono" style={{ fontSize: 15, fontWeight: 800 }}>{r.blobs}</div>
+            <div className="mono" style={{ fontSize: 10, opacity: 0.7 }}>{r.size}</div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <span className="mono" style={{
+              fontSize: 11, fontWeight: 800,
+              padding: "3px 6px",
+              background: r.trend >= 0 ? "var(--mint)" : "var(--burgundy)",
+              color: r.trend >= 0 ? "var(--ink)" : "var(--tusk)",
+              border: "2px solid var(--ink)"
+            }}>{r.trend >= 0 ? "▲" : "▼"} {Math.abs(r.trend)}%</span>
+          </div>
         </div>
-      </CardContent>
-    </Card>
-  )
+      ))}
+    </div>
+  );
 }

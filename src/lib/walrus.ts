@@ -1,14 +1,19 @@
 import type { BlobInfo, WalrusMetrics } from "@/types"
 
 const MOCK_PUBLISHERS = [
-  "0x7b8f3a2c9d1e4f5a6b7c8d9e0f1a2b3c4d5e6f7",
-  "0xa1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
-  "0x9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0",
-  "0xf0e1d2c3b4a5968778695a4b3c2d1e0f1a2b3c4",
-  "0x1234567890abcdef1234567890abcdef12345678",
-  "0xdeadbeefcafebabedeadbeefcafebabedeadbeef",
-  "0xabcdef0123456789abcdef0123456789abcdef01",
-  "0x0102030405060708090a0b0c0d0e0f1011121314",
+  { address: "0xd4e83c7f5b2a1960e8f4d9c3b7a6e5f0c8d2a931", label: "Sui Capy Storage" },
+  { address: "0x91bf4a8d6e3c7f2b0a5d9e8c1f4b7a3d6e0fc042", label: "WalrusVault Pro" },
+  { address: "0x2f8a4b6c0d1e3f5a7b9c2d4e6f8a0b1c3d5e7f80", label: "BlobHoard DAO" },
+  { address: "0xc3d5e7f9a1b2c4d6e8f0a2b4c6d8e0f1a3b5c7d9", label: "Mysten Archiver" },
+  { address: "0x5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b", label: "DeFi Snapshots" },
+  { address: "0xe8f0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6", label: "NFT Vault Sui" },
+  { address: "0x1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5f7a9b", label: "GameFi Assets" },
+  { address: "0x4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c", label: "Data Capsule Co" },
+]
+
+const MIME_TYPES = [
+  "image/png", "image/jpeg", "video/mp4", "text/plain",
+  "application/pdf", "application/json", "model/gltf-binary", "audio/mp3",
 ]
 
 function generateMockBlobs(count: number): BlobInfo[] {
@@ -17,7 +22,7 @@ function generateMockBlobs(count: number): BlobInfo[] {
   const thirtyDaysAgo = now - 30 * 86400
 
   for (let i = 0; i < count; i++) {
-    const publisher = MOCK_PUBLISHERS[i % MOCK_PUBLISHERS.length]
+    const publisher = MOCK_PUBLISHERS[i % MOCK_PUBLISHERS.length].address
     const timestamp = thirtyDaysAgo + Math.floor(Math.random() * (now - thirtyDaysAgo))
     const size = Math.floor(Math.random() * 500000) + 500
 
@@ -25,7 +30,7 @@ function generateMockBlobs(count: number): BlobInfo[] {
       id: `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`,
       publisher,
       size,
-      storageType: Math.random() > 0.3 ? "permanent" : "ephemeral",
+      storageType: MIME_TYPES[Math.floor(Math.random() * MIME_TYPES.length)],
       timestamp,
       digest: `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`,
       erasureCodeType: "redStuff",
@@ -89,8 +94,10 @@ function computeMetrics(blobs: BlobInfo[]): WalrusMetrics {
     sizeBuckets.set(bucket, (sizeBuckets.get(bucket) || 0) + 1)
   }
 
+  const publisherLabels = new Map(MOCK_PUBLISHERS.map(p => [p.address, p.label]))
+
   const topPublishers = [...publisherMap.entries()]
-    .map(([address, data]) => ({ address, ...data }))
+    .map(([address, data]) => ({ address, label: publisherLabels.get(address) ?? "Unknown", ...data }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
 

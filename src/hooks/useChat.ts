@@ -9,7 +9,7 @@ export interface UseChatReturn {
   setInput: (val: string) => void
   loading: boolean
   generatingReport: boolean
-  handleSend: () => Promise<void>
+  handleSend: (overrideMsg?: string) => Promise<void>
   handleGenerateReport: () => Promise<void>
   endRef: React.RefObject<HTMLDivElement | null>
 }
@@ -19,7 +19,7 @@ export function useChat(): UseChatReturn {
     {
       role: "assistant",
       content:
-        'Hi! I\'m Walytics AI. Ask me anything about Walrus storage analytics. For example:\n\n- **"Who is the top publisher this week?"**\n- **"What\'s the average blob size?"**\n- **"Generate a weekly report"**\n- **"How is storage usage trending?"**',
+        '**Case W-0042 — opened just now.**\n\nGood evening, Watson. I\'ve been studying the Walrus storage network rather closely. The evidence locker is filling up — and I have some theories.\n\nAsk me about **publishers**, **blob anomalies**, **storage trends**, or request a **full case report**. I cite every claim with evidence from the chain.\n\n*Puffs pipe thoughtfully.*',
     },
   ])
   const [input, setInput] = useState("")
@@ -31,10 +31,11 @@ export function useChat(): UseChatReturn {
     endRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  async function handleSend() {
-    if (!input.trim() || loading) return
+  async function handleSend(overrideMsg?: string) {
+    const msg = overrideMsg ?? input
+    if (!msg.trim() || loading) return
 
-    const userMsg: ChatMessage = { role: "user", content: input }
+    const userMsg: ChatMessage = { role: "user", content: msg }
     setMessages((prev) => [...prev, userMsg])
     setInput("")
     setLoading(true)
@@ -43,7 +44,7 @@ export function useChat(): UseChatReturn {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: msg }),
       })
 
       if (!res.ok) {

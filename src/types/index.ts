@@ -13,7 +13,7 @@ export interface WalrusMetrics {
   totalSize: number
   uniquePublishers: number
   avgBlobSize: number
-  topPublishers: { address: string; count: number; totalSize: number }[]
+  topPublishers: { address: string; label: string; count: number; totalSize: number }[]
   blobsOverTime: { date: string; count: number }[]
   sizeDistribution: { range: string; count: number }[]
 }

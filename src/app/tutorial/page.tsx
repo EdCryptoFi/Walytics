@@ -1,191 +1,154 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BarChart3, Search, MessageSquare, FileText, Database, Cpu, BookOpen, CodeXml, ExternalLink } from "lucide-react"
-
-const features = [
-  {
-    icon: BarChart3,
-    title: "Dashboard Analítico",
-    desc: "Visão geral do Walrus: total de blobs, armazenamento usado, publishers únicos e tamanho médio dos blobs em tempo real.",
-    color: "text-blue-600",
-    bg: "bg-blue-50 dark:bg-blue-950/50",
-  },
-  {
-    icon: Search,
-    title: "Blob Explorer",
-    desc: "Navegue e pesquise blobs armazenados no Walrus. Filtre por publisher, tamanho e data. Veja detalhes como digest e tipo de armazenamento.",
-    color: "text-emerald-600",
-    bg: "bg-emerald-50 dark:bg-emerald-950/50",
-  },
-  {
-    icon: MessageSquare,
-    title: "AI Analytics Chat",
-    desc: "Faça perguntas em linguagem natural sobre os dados de armazenamento. A IA (Gemini 2.0 Flash) responde com análises baseadas nos dados reais.",
-    color: "text-violet-600",
-    bg: "bg-violet-50 dark:bg-violet-950/50",
-  },
-  {
-    icon: FileText,
-    title: "Relatórios Automáticos",
-    desc: "Gere relatórios semanais de analytics com um clique. A IA analisa tendências, top publishers e métricas de armazenamento.",
-    color: "text-amber-600",
-    bg: "bg-amber-50 dark:bg-amber-950/50",
-  },
-  {
-    icon: Database,
-    title: "Dogfooding no Walrus",
-    desc: "Os snapshots de analytics são armazenados de volta no Walrus como blobs, criando um histórico imutável e verificável das métricas.",
-    color: "text-rose-600",
-    bg: "bg-rose-50 dark:bg-rose-950/50",
-  },
-  {
-    icon: Cpu,
-    title: "Tatum Sui RPC",
-    desc: "Conexão direta com a Sui via Tatum RPC endpoints. Consultas on-chain para dados de blob storage e objetos do Walrus.",
-    color: "text-cyan-600",
-    bg: "bg-cyan-50 dark:bg-cyan-950/50",
-  },
-]
+import { PageHead } from "@/components/Layout/PageHead";
+import { Footer } from "@/components/Layout/Footer";
 
 const steps = [
   {
     step: "1",
-    title: "Conecte sua API Key",
-    desc: "Obtenha uma Tatum API Key gratuita em dashboard.tatum.io e adicione no .env.local. O Walytics usa os endpoints Sui RPC da Tatum.",
+    title: "Connect your API Key",
+    desc: "Get a free Tatum API key at dashboard.tatum.io and add it to .env.local. Walytics uses Tatum's Sui RPC endpoints to fetch on-chain blob data.",
+    kicker: "⚙️ First things first",
   },
   {
     step: "2",
-    title: "Explore o Dashboard",
-    desc: "A página inicial mostra métricas agregadas do Walrus: total de blobs, armazenamento, publishers ativos e distribuição de tamanhos.",
+    title: "Explore the Dashboard",
+    desc: "The main page shows aggregated Walrus metrics: total blobs filed, storage used, active publishers, size distributions, and timeline trends.",
+    kicker: "📊 The big picture",
   },
   {
     step: "3",
-    title: "Interaja com a IA",
-    desc: "Vá até AI Analytics e pergunte sobre os dados. Ex: 'Qual o maior blob armazenado?' ou 'Quantos blobs foram publicados hoje?'.",
+    title: "Interrogate the AI",
+    desc: "Head to AI Analytics and ask Holmes anything. Try: 'Who is the top publisher?' or 'What's the average blob size?' or 'How is storage trending?'",
+    kicker: "🚬 Ask Holmes",
   },
   {
     step: "4",
-    title: "Gere Relatórios",
-    desc: "Clique em 'Generate Report' no chat para obter um relatório semanal automático com análise de tendências e top publishers.",
+    title: "Generate Reports",
+    desc: "Click 'Generate Report' in the chat to produce an automated weekly analytics summary — trends, top publishers, and storage anomalies.",
+    kicker: "📋 Case summary",
   },
-]
+];
+
+const features = [
+  {
+    icon: "📈",
+    title: "Analytics Dashboard",
+    desc: "Real-time Walrus metrics: blob counts, storage totals, unique publishers, and average sizes. All data from the Sui blockchain via Tatum RPC.",
+    accent: "var(--mint)",
+  },
+  {
+    icon: "🔍",
+    title: "Blob Explorer",
+    desc: "Browse and search all blobs stored in Walrus. Filter by publisher, size, or storage type. Inspect individual blob evidence in the right panel.",
+    accent: "var(--gold)",
+  },
+  {
+    icon: "🤖",
+    title: "AI Analytics Chat",
+    desc: "Ask natural language questions about the storage data. Gemini 2.0 Flash answers with analysis grounded in real-time metrics.",
+    accent: "var(--paper-2)",
+  },
+  {
+    icon: "📋",
+    title: "Automatic Reports",
+    desc: "One-click weekly analytics reports with trend analysis, top publisher breakdowns, and storage anomaly detection.",
+    accent: "var(--burgundy)",
+  },
+  {
+    icon: "🦭",
+    title: "Walrus Dogfooding",
+    desc: "Analytics snapshots are written back to Walrus as blobs — creating an immutable, verifiable history of the metrics themselves.",
+    accent: "var(--tweed)",
+  },
+  {
+    icon: "🔗",
+    title: "Tatum Sui RPC",
+    desc: "Direct connection to Sui via Tatum RPC. On-chain queries for blob storage objects and Walrus protocol data, no middleman.",
+    accent: "var(--rust)",
+  },
+];
+
+const stack = [
+  { label: "Frontend",    value: "Next.js 16 (App Router), Tailwind v4" },
+  { label: "Blockchain",  value: "Tatum Sui RPC" },
+  { label: "Storage",     value: "Walrus Protocol" },
+  { label: "AI Engine",   value: "Gemini 2.0 Flash" },
+];
 
 export default function TutorialPage() {
   return (
-    <div className="space-y-12">
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold tracking-tight">Tutorial</h1>
-        <p className="text-lg text-zinc-500 dark:text-zinc-400 max-w-2xl">
-          Walytics é uma plataforma de analytics para o{" "}
-          <a href="https://walrus.xyz" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline underline-offset-2">
-            Walrus
-          </a>
-          , o protocolo de armazenamento descentralizado da Sui, construída com a{" "}
-          <a href="https://tatum.io" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline underline-offset-2">
-            Tatum API
-          </a>{" "}
-          e IA do{" "}
-          <a href="https://ai.google.dev" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline underline-offset-2">
-            Gemini
-          </a>.
-        </p>
+    <div className="container" style={{ paddingTop: 0 }}>
+      <PageHead
+        kicker="📖 Field manual"
+        caseNo="W-0042-TUT"
+        title={<>How to Run<br/>the Case.</>}
+        lede="A field guide to Walytics — Walrus Holmes Edition. Learn the tools, read the evidence, interrogate the data."
+      />
+
+      {/* Steps */}
+      <section style={{ marginBottom: 28 }}>
+        <div className="kicker" style={{ marginBottom: 10 }}>🔢 Procedure</div>
+        <h2 className="h-display" style={{ fontSize: 26, marginBottom: 18 }}>How to Use</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+          {steps.map((s) => (
+            <div key={s.step} className="brut" style={{ padding: "18px 20px 20px" }}>
+              <div className="kicker" style={{ marginBottom: 6, fontSize: 9 }}>{s.kicker}</div>
+              <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                <span style={{
+                  width: 36, height: 36, background: "var(--gold)", border: "2.5px solid var(--ink)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontFamily: "var(--font-display)", fontWeight: 900, fontSize: 16, flexShrink: 0
+                }}>{s.step}</span>
+                <div>
+                  <div className="h-display" style={{ fontSize: 18, marginBottom: 8 }}>{s.title}</div>
+                  <p style={{ fontFamily: "var(--font-body)", fontSize: 13.5, lineHeight: 1.6, color: "var(--ink-soft)" }}>{s.desc}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section style={{ marginBottom: 28 }}>
+        <div className="kicker" style={{ marginBottom: 10 }}>🧰 Capabilities</div>
+        <h2 className="h-display" style={{ fontSize: 26, marginBottom: 18 }}>Features</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 14 }}>
+          {features.map((f) => (
+            <div key={f.title} className="brut" style={{ padding: "16px 18px", background: f.accent }}>
+              <div style={{ fontSize: 28, marginBottom: 8 }}>{f.icon}</div>
+              <div className="h-display" style={{ fontSize: 17, marginBottom: 8 }}>{f.title}</div>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: 13, lineHeight: 1.55, color: "var(--ink-soft)" }}>{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Stack */}
+      <section className="brut" style={{ padding: "20px 22px 22px", marginBottom: 22 }}>
+        <div className="kicker" style={{ marginBottom: 4 }}>⚙️ Under the magnifying glass</div>
+        <h2 className="h-display" style={{ fontSize: 26, marginBottom: 16 }}>Tech Stack</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px,1fr))", gap: 12 }}>
+          {stack.map((s) => (
+            <div key={s.label} className="brut brut-paper2" style={{ padding: "10px 14px" }}>
+              <div className="kicker" style={{ fontSize: 9 }}>{s.label}</div>
+              <div className="mono" style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>{s.value}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Links */}
+      <div className="brut" style={{ padding: "18px 22px", background: "var(--paper-2)", display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 22 }}>
+        <a href="https://docs.wal.app" target="_blank" rel="noopener noreferrer"
+           className="btn" style={{ padding: "10px 16px", fontSize: 12 }}>Walrus Docs →</a>
+        <a href="https://tatum.io/mcp" target="_blank" rel="noopener noreferrer"
+           className="btn" style={{ padding: "10px 16px", fontSize: 12 }}>Tatum MCP →</a>
+        <a href="https://github.com/EdCryptoFi/Walytics" target="_blank" rel="noopener noreferrer"
+           className="btn btn-primary" style={{ padding: "10px 16px", fontSize: 12 }}>GitHub Repo →</a>
+        <a href="/docs" className="btn btn-mint" style={{ padding: "10px 16px", fontSize: 12 }}>Full Docs →</a>
       </div>
 
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
-          <BookOpen className="h-6 w-6 text-blue-600" />
-          Como Usar
-        </h2>
-        <div className="grid gap-6 md:grid-cols-2">
-          {steps.map((s) => (
-            <Card key={s.step}>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
-                    {s.step}
-                  </span>
-                  <CardTitle className="text-base">{s.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">{s.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
-          <BarChart3 className="h-6 w-6 text-blue-600" />
-          Funcionalidades
-        </h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <Card key={f.title}>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <div className={`rounded-lg p-2 ${f.bg}`}>
-                    <f.icon className={`h-5 w-5 ${f.color}`} />
-                  </div>
-                  <CardTitle className="text-sm">{f.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">{f.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
-          <Cpu className="h-6 w-6 text-blue-600" />
-          Stack Técnica
-        </h2>
-        <Card>
-          <CardContent className="p-6">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { label: "Frontend", value: "Next.js 16 + Tailwind v4" },
-                { label: "Blockchain", value: "Tatum Sui RPC" },
-                { label: "Storage", value: "Walrus Protocol" },
-                { label: "IA", value: "Gemini 2.0 Flash" },
-              ].map((item) => (
-                <div key={item.label}>
-                  <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider">{item.label}</p>
-                  <p className="mt-1 text-sm font-medium">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section className="rounded-xl border border-zinc-200 bg-zinc-50 p-6 dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="font-semibold">🔗 Links Úteis</h3>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Documentação e recursos usados no projeto
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <a href="https://docs.wal.app" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700">
-              <ExternalLink className="h-4 w-4" />
-              Walrus Docs
-            </a>
-            <a href="https://tatum.io/mcp" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-medium hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-800 dark:hover:bg-zinc-700">
-              <ExternalLink className="h-4 w-4" />
-              Tatum MCP
-            </a>
-            <a href="https://github.com/EdCryptoFi/Walytics" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200">
-              <CodeXml className="h-4 w-4" />
-              GitHub
-            </a>
-          </div>
-        </div>
-      </section>
+      <Footer/>
     </div>
-  )
+  );
 }
