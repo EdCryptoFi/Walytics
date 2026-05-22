@@ -6,6 +6,7 @@ import { BlobsChart } from "@/components/Dashboard/BlobsChart"
 import { TopPublishers } from "@/components/Dashboard/TopPublishers"
 import { StorageDistribution } from "@/components/Dashboard/StorageDistribution"
 import type { WalrusMetrics } from "@/lib/walrus"
+import { TatumStatus } from "@/components/Dashboard/TatumStatus"
 
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState<WalrusMetrics | null>(null)
@@ -36,6 +37,8 @@ export default function DashboardPage() {
           Real-time analytics for Walrus decentralized storage
         </p>
       </div>
+
+      <TatumStatus />
 
       <OverviewCards metrics={metrics} loading={loading} />
 
