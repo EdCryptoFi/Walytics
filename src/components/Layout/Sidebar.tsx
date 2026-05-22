@@ -3,12 +3,13 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { BarChart3, MessageSquare, Search, FileText, CodeXml } from "lucide-react"
+import { BarChart3, MessageSquare, Search, FileText, CodeXml, BookOpen } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: BarChart3 },
   { href: "/explorer", label: "Blob Explorer", icon: Search },
   { href: "/chat", label: "AI Analytics", icon: MessageSquare },
+  { href: "/tutorial", label: "Tutorial", icon: BookOpen },
 ]
 
 export function Sidebar() {

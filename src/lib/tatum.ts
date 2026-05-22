@@ -1,28 +1,19 @@
 const TATUM_API_KEY = process.env.TATUM_API_KEY || ""
 const SUI_RPC_URL = "https://sui-mainnet.gateway.tatum.io"
 
-interface TatumRpcRequest {
-  jsonrpc: "2.0"
-  id: number
-  method: string
-  params: unknown[]
-}
-
 export async function tatumRpcCall<T>(method: string, params: unknown[] = []): Promise<T> {
-  const body: TatumRpcRequest = {
-    jsonrpc: "2.0",
-    id: 1,
-    method,
-    params,
-  }
-
   const res = await fetch(SUI_RPC_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-api-key": TATUM_API_KEY,
     },
-    body: JSON.stringify(body),
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method,
+      params,
+    }),
   })
 
   if (!res.ok) {
@@ -35,8 +26,4 @@ export async function tatumRpcCall<T>(method: string, params: unknown[] = []): P
   }
 
   return data.result as T
-}
-
-export function getWalrusPackageId(): string {
-  return "0x...walrus-package-id..."
 }
