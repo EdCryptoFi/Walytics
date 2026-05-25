@@ -436,7 +436,7 @@ export default function DashboardPage() {
             padding: "28px 24px 22px",
           } as CSSProperties}
         >
-          <div className="kicker" style={{ marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+          <div className="kicker" style={{ marginBottom: 8, display: "flex", alignItems: "center", gap: 6, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>
             <motion.span
               className="material-symbols-outlined"
               animate={animations ? { rotate: [0, 15, -15, 0] } : {}}
@@ -445,7 +445,7 @@ export default function DashboardPage() {
             >bolt</motion.span>
             The Detective&apos;s Toolkit
           </div>
-          <h2 className="h-display noir-spotlight" style={{ fontSize: "clamp(32px, 4vw, 48px)", margin: "0 0 20px", color: "var(--cream, #f5f0e8)", position: "relative" }}>Quick Actions</h2>
+          <h2 className="h-display noir-spotlight" style={{ fontSize: "clamp(34px, 4vw, 50px)", margin: "0 0 20px", color: "#fff", position: "relative", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Quick Actions</h2>
           <div style={{
             background: "var(--paper-2)",
             border: "3px solid var(--ink)",

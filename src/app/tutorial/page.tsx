@@ -115,8 +115,8 @@ export default function TutorialPage() {
 
         {/* ── 1. Getting Started ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 01</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>Getting Started</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 01</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Getting Started</h2>
 
           {/* Quick setup steps */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 20 }}>
@@ -182,8 +182,8 @@ export default function TutorialPage() {
 
         {/* ── 2. Tatum Integration ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 02</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>Tatum Integration</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 02</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Tatum Integration</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
             <div style={{
@@ -253,8 +253,8 @@ export default function TutorialPage() {
 
         {/* ── 3. Walrus Storage ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 03</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>Walrus Storage</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 03</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Walrus Storage</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px,1fr))", gap: 16 }}>
             <div className="paper-hover animate-on-load" style={{
@@ -321,8 +321,8 @@ export default function TutorialPage() {
 
         {/* ── 4. AI Analytics ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 04</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>AI Analytics — Walytics Holmes</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 04</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>AI Analytics — Walytics Holmes</h2>
 
           <div style={{
             background: "var(--ink)",
@@ -374,8 +374,8 @@ export default function TutorialPage() {
 
         {/* ── 5. Blob Explorer ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 05</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>Blob Explorer</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 05</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Blob Explorer</h2>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
             {[
@@ -401,8 +401,8 @@ export default function TutorialPage() {
 
         {/* ── 6. Architecture ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 06</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>Architecture</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 06</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Architecture</h2>
 
           {/* Tech stack */}
           <div style={{
@@ -459,8 +459,8 @@ export default function TutorialPage() {
 
         {/* ── 7. Resources ── */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Section 07</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 20 }}>Resources</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Section 07</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 20, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Resources</h2>
 
           <div style={{
             background: "var(--paper-2)",
@@ -501,8 +501,8 @@ export default function TutorialPage() {
 
         {/* Features overview strip */}
         <section style={{ marginBottom: 32 }}>
-          <div className="kicker" style={{ marginBottom: 8 }}>Capabilities</div>
-          <h2 className="h-display" style={{ fontSize: 28, marginBottom: 24 }}>Feature Overview</h2>
+          <div className="kicker" style={{ marginBottom: 8, color: "#fff", fontSize: 16, textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Capabilities</div>
+          <h2 className="h-display" style={{ fontSize: 30, marginBottom: 24, color: "#fff", textShadow: "1px 1px 4px rgba(0,0,0,0.7)" }}>Feature Overview</h2>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
             {features.map((f, i) => (
               <div key={f.title} className="paper-hover animate-on-load" style={{

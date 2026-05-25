@@ -82,6 +82,26 @@ html, body {
   position: relative;
   z-index: 1;
 }
+/* Out-of-box text: section headers sitting directly over the background */
+.page-surface > .container > section > .kicker,
+.page-surface > .container > div > .kicker,
+.page-surface > .container > section > h2.h-display,
+.page-surface > .container > section > .h-display,
+.page-surface > .container > div > h2.h-display,
+.page-surface > .container > div > .h-display {
+  color: #fff;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+}
+.page-surface > .container > section > .kicker,
+.page-surface > .container > div > .kicker {
+  font-size: 16px;
+}
+.page-surface > .container > section > h2.h-display,
+.page-surface > .container > section > .h-display,
+.page-surface > .container > div > h2.h-display,
+.page-surface > .container > div > .h-display {
+  font-size: 30px;
+}
 /* beige base provides readability — no dark overlay needed */
 
 /* sidebar layout helpers */

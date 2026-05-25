@@ -12,7 +12,8 @@ export function Bubble({ msg, time }: BubbleProps) {
   const isLong = msg.content.length > 120;
   const formatted = msg.content
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono);background:rgba(0,0,0,0.08);padding:1px 5px;font-size:0.92em">$1</code>');
+    .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono);background:rgba(0,0,0,0.08);padding:1px 5px;font-size:0.92em">$1</code>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:var(--mint-deep);text-decoration:underline;font-weight:600">$1</a>');
 
   return (
     <div style={{

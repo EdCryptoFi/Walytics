@@ -1,6 +1,6 @@
 "use client";
 
-const BG_URL = "https://lh3.googleusercontent.com/aida-public/AB6AXuA2SCLznnj6lbYKlp0B__95tGC5zvxyLbH1izdzY4elmQJ_FXWjLrGxgaRTen0MBWZh6ms66bTokag-MK_xrm-F-KVAU-wTsrZa1RJrNeO3TRFbcO_jLEsESuUHmaT1qgmJ6QBt24wYrG2pXqiahJ2m3lkADqbQD9BJ4cRYk6nOu2D3eEQ8O7esxnPftAkf-1w3RVUWATCin2MPwt4kLf0qbQodwTBqW3ATVOxSUjmQQF-dMFudleX4t0mwlEYjJN0hRNcAt5eWiYM";
+const BG_URL = "/bkg.png";
 
 export function DetectiveBackground() {
   return (
