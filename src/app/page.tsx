@@ -93,12 +93,14 @@ export default function DashboardPage() {
               />
               <Connection/>
             </div>
-            {/* Right: Walytics Holmes character art — large */}
-            <div style={{ flex: "1 1 420px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            {/* Right: Walytics Holmes character art — fills hero height */}
+            <div style={{ flex: "1 1 420px", display: "flex", justifyContent: "center", alignItems: "stretch" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/index.png" alt="Walytics Holmes Characters" style={{
                 width: "100%",
-                maxWidth: 540,
+                maxWidth: "none",
+                height: "100%",
+                minHeight: 320,
                 objectFit: "contain",
                 filter: "drop-shadow(4px 6px 12px rgba(0,0,0,0.4))",
               }}/>
