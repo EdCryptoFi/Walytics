@@ -89,7 +89,7 @@ export default function DashboardPage() {
 
         {/* Hero dossier — with character on right */}
         <div
-          className="animate-on-load ink-bleed"
+          className="animate-on-load ink-bleed classified-watermark"
           style={{
             "--initial-rotation": "0.12deg",
             animationDelay: "0.1s",
@@ -104,6 +104,14 @@ export default function DashboardPage() {
             minHeight: 320,
           } as CSSProperties}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/walytics.png" alt="Walytics Holmes Banner" style={{
+            width: "100%",
+            maxWidth: 700,
+            objectFit: "contain",
+            marginBottom: 16,
+            filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.3))",
+          }}/>
           <PageHead
             kicker="Walytics Holmes is on the case"
             caseNo="W-0042-MAY"
@@ -273,7 +281,7 @@ export default function DashboardPage() {
         <div className="grid" style={{ gridTemplateColumns: "minmax(0, 2.6fr) minmax(280px, 1fr)", marginBottom: 32, gap: 24, alignItems: "flex-start" }}>
 
           <div
-            className="paper-hover animate-on-load ink-bleed"
+            className="paper-hover animate-on-load ink-bleed wire-decoration"
             style={{
               "--initial-rotation": "-0.43deg",
               animationDelay: "0.6s",
@@ -346,14 +354,14 @@ export default function DashboardPage() {
             }}>
               {/* Logo */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Walytics Holmes" style={{ width: "100%", maxWidth: 260, objectFit: "contain", zIndex: 1 }}/>
+              <img src="/logo.png" alt="Walytics Holmes" style={{ width: "100%", maxWidth: 140, objectFit: "contain", zIndex: 1 }}/>
               {/* Character — floating animation, larger */}
               <motion.div
                 animate={{ y: [0, -8, 0], rotate: [-0.5, 0.5, -0.5] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                style={{ marginTop: -16, zIndex: 2 }}
+                style={{ marginTop: -40, zIndex: 2 }}
               >
-                <RandomCharacter width={200} height={230} alt="Walytics Holmes" style={{ objectFit: "contain" }}/>
+                <RandomCharacter width={260} height={300} alt="Walytics Holmes" style={{ objectFit: "contain" }}/>
               </motion.div>
             </div>
             <div style={{
@@ -383,7 +391,7 @@ export default function DashboardPage() {
         <div className="grid" style={{ gridTemplateColumns: "minmax(0,1.1fr) minmax(0,1fr)", marginBottom: 32, gap: 24 }}>
 
           <div
-            className="paper-hover animate-on-load"
+            className="paper-hover animate-on-load coffee-ring"
             style={{
               "--initial-rotation": "0.21deg",
               animationDelay: "0.8s",
@@ -466,7 +474,7 @@ export default function DashboardPage() {
             >bolt</motion.span>
             The Detective&apos;s Toolkit
           </div>
-          <h2 className="h-display" style={{ fontSize: "clamp(32px, 4vw, 48px)", margin: "0 0 20px", color: "var(--cream, #f5f0e8)" }}>Quick Actions</h2>
+          <h2 className="h-display noir-spotlight" style={{ fontSize: "clamp(32px, 4vw, 48px)", margin: "0 0 20px", color: "var(--cream, #f5f0e8)", position: "relative" }}>Quick Actions</h2>
           <div style={{
             background: "var(--paper-2)",
             border: "3px solid var(--ink)",
@@ -542,9 +550,14 @@ export default function DashboardPage() {
       </div>
 
       {animations && (
-        <div style={{ position: "fixed", bottom: 0, right: 12, zIndex: 5, pointerEvents: "none", opacity: 0.9 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <RandomCharacter width={82} height={82} alt="Walytics Holmes" style={{ borderTop: "2px solid var(--ink)", borderLeft: "2px solid var(--ink)" }}/>
+        <div style={{
+          position: "fixed", bottom: 16, right: 16, zIndex: 5, pointerEvents: "none",
+        }}>
+          <span className="material-symbols-outlined mag-glow" style={{
+            fontSize: 48,
+            color: "var(--gold)",
+            opacity: 0.85,
+          }}>search</span>
         </div>
       )}
     </div>

@@ -1036,3 +1036,177 @@ button.btn:active, a.btn:active {
     gap: 10px;
   }
 }
+
+/* ── Noir Investigation Details ── */
+
+/* Redacted text effect */
+.redacted {
+  background: var(--ink);
+  color: transparent;
+  user-select: none;
+  padding: 0 4px;
+  position: relative;
+}
+.redacted::after {
+  content: "[REDACTED]";
+  position: absolute;
+  left: 0; top: 0;
+  color: rgba(255,255,255,0.15);
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  letter-spacing: 0.15em;
+}
+
+/* Pin-string connection lines */
+.string-connection {
+  position: relative;
+}
+.string-connection::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -24px;
+  width: 24px;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 4px, transparent 4px, transparent 8px);
+  opacity: 0.3;
+}
+
+/* Evidence number badge */
+.evidence-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--burgundy, #8b1a1a);
+  color: var(--tusk, #f5f0e8);
+  border: 2px solid var(--ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 2px 2px 0 0 rgba(0,0,0,0.5);
+}
+
+/* Magnifying glass glow pulse */
+@keyframes mag-glow {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(218,165,32,0.4)); }
+  50% { filter: drop-shadow(0 0 18px rgba(218,165,32,0.7)); }
+}
+.mag-glow {
+  animation: mag-glow 3s ease-in-out infinite;
+}
+
+/* Ink splatter decoration */
+.ink-splatter::before {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at 30% 40%, rgba(0,0,0,0.15) 0%, transparent 60%),
+              radial-gradient(circle at 70% 60%, rgba(0,0,0,0.1) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Coffee ring stain */
+.coffee-ring::after {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(101, 67, 33, 0.12);
+  pointer-events: none;
+  bottom: -10px;
+  right: -10px;
+  z-index: 0;
+}
+
+/* Case file folder tab */
+.folder-tab {
+  position: relative;
+}
+.folder-tab::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: 12px;
+  width: 80px;
+  height: 18px;
+  background: var(--gold);
+  clip-path: polygon(0 0, 85% 0, 100% 100%, 0% 100%);
+  border: 2px solid var(--ink);
+  border-bottom: none;
+}
+
+/* Classified watermark */
+.classified-watermark {
+  position: relative;
+}
+.classified-watermark::before {
+  content: "CLASSIFIED";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 900;
+  color: rgba(186, 26, 26, 0.06);
+  letter-spacing: 0.15em;
+  pointer-events: none;
+  z-index: 0;
+  white-space: nowrap;
+}
+
+/* Wire/string decoration across cards */
+.wire-decoration::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 6px,
+    var(--ink) 6px,
+    var(--ink) 12px
+  );
+  opacity: 0.2;
+}
+
+/* Noir spotlight effect for sections */
+.noir-spotlight {
+  position: relative;
+}
+.noir-spotlight::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 80px;
+  background: radial-gradient(ellipse at center, rgba(180,120,50,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Torn paper bottom edge */
+.torn-bottom {
+  clip-path: polygon(
+    0% 0%, 100% 0%, 100% 93%,
+    97% 96%, 94% 92%, 91% 97%,
+    87% 93%, 83% 98%, 79% 94%,
+    75% 97%, 71% 93%, 67% 96%,
+    63% 92%, 59% 98%, 55% 94%,
+    51% 97%, 47% 93%, 43% 96%,
+    39% 92%, 35% 98%, 31% 94%,
+    27% 97%, 23% 93%, 19% 96%,
+    15% 92%, 11% 98%, 7% 94%,
+    3% 97%, 0% 93%
+  );
+  padding-bottom: 12px;
+}

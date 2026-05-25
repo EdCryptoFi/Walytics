@@ -9,9 +9,9 @@ export function DetectiveBackground() {
       <div style={{
         position: "fixed", inset: 0, zIndex: -3,
         background: "#0e0b08",
-        backgroundImage: `url('${BG_URL}')`,
+        backgroundImage: `url('/desk-bg.jpg'), url('${BG_URL}')`,
         backgroundSize: "cover",
-        backgroundPosition: "center center",
+        backgroundPosition: "center top",
         backgroundRepeat: "no-repeat",
         opacity: 0.5,
         filter: "brightness(0.85) saturate(0.8) sepia(0.2)",

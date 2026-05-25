@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { PageHead } from "@/components/Layout/PageHead";
 import { Footer } from "@/components/Layout/Footer";
-import { useFlashlight } from "@/components/Layout/FlashlightOverlay";
 
 const steps = [
   {
@@ -53,23 +51,6 @@ const stack = [
 ];
 
 export default function TutorialPage() {
-  const { toggle: toggleFlashlight } = useFlashlight();
-  const [zoomActive, setZoomActive] = useState(false);
-  const [annotating, setAnnotating] = useState(false);
-
-  function toggleZoom() {
-    setZoomActive(z => {
-      document.body.style.cursor = !z ? "zoom-in" : "";
-      return !z;
-    });
-  }
-  function toggleAnnotate() {
-    setAnnotating(a => {
-      document.body.style.cursor = !a ? "crosshair" : "";
-      return !a;
-    });
-  }
-
   return (
     <div className="page-surface">
       <div className="container" style={{ paddingTop: 0 }}>
@@ -183,38 +164,6 @@ export default function TutorialPage() {
         </div>
 
         <Footer/>
-      </div>
-
-      {/* Detective's Toolkit dock — fixed bottom */}
-      <div style={{
-        position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)",
-        display: "flex", gap: 0, zIndex: 20,
-        border: "3px solid var(--ink)",
-        borderBottom: "none",
-        boxShadow: "0 -4px 0 0 rgba(0,0,0,0.5)",
-        background: "var(--ink)",
-      }}>
-        {([
-          { icon: "🔍", label: "Zoom",       active: zoomActive,   fn: toggleZoom },
-          { icon: "🔦", label: "Flashlight", active: false,         fn: toggleFlashlight },
-          { icon: "✏️", label: "Annotate",   active: annotating,   fn: toggleAnnotate },
-        ] as {icon:string; label:string; active:boolean; fn:()=>void}[]).map((t) => (
-          <button key={t.label} onClick={t.fn} style={{
-            padding: "10px 20px",
-            background: t.active ? "rgba(255,255,255,0.15)" : "transparent",
-            color: "var(--tusk)",
-            border: "none",
-            borderRight: "2px solid rgba(255,255,255,0.15)",
-            cursor: "pointer",
-            display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
-            fontFamily: "var(--font-mono)", fontSize: 9, letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            transition: "background 0.15s",
-          }}>
-            <span style={{ fontSize: 18 }}>{t.icon}</span>
-            <span>{t.label}</span>
-          </button>
-        ))}
       </div>
     </div>
   );
