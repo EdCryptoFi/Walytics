@@ -105,7 +105,7 @@ export default function DashboardPage() {
           } as CSSProperties}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/walytics.png" alt="Walytics Holmes Banner" style={{
+          <img src="/index.png" alt="Walytics Holmes Characters" style={{
             width: "100%",
             maxWidth: 700,
             objectFit: "contain",
