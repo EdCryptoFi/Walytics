@@ -1,5 +1,5 @@
-import { WalrusPeek } from "@/components/Mascot/WalrusPeek";
 import { IconMagnify, IconKey, IconBook } from "@/components/Mascot/DetectiveIcons";
+import { RandomCharacter } from "@/components/UI/RandomCharacter";
 import { formatBytes, shortenAddress, formatTimestamp } from "@/lib/utils";
 import type { BlobInfo } from "@/types";
 
@@ -48,7 +48,7 @@ export function Inspector({ blob, idx, animate }: InspectorProps) {
         padding: 22, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
         textAlign: "center", minHeight: 500, position: "sticky", top: 80
       }}>
-        <div style={{ width: 140 }}><WalrusPeek size={140} animate={animate}/></div>
+        <RandomCharacter width={160} height={160} alt="Walytics Holmes"/>
         <h3 className="h-display" style={{ fontSize: 22, margin: "12px 0 4px" }}>Pick a blob, Watson.</h3>
         <p className="mono" style={{ fontSize: 11.5, opacity: 0.75, maxWidth: 220 }}>
           Click any row to bring the evidence to the magnifying glass.

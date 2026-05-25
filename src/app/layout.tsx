@@ -1,44 +1,33 @@
 import type { Metadata } from "next";
 import {
-  Archivo_Black,
-  Space_Grotesk,
-  JetBrains_Mono,
-  Playfair_Display,
-  Crimson_Pro,
+  Archivo_Narrow,
+  Inter,
+  Courier_Prime,
 } from "next/font/google";
 import "./globals.css";
 import { Nav } from "@/components/Layout/Nav";
 import { ThemeProvider } from "@/components/Layout/ThemeProvider";
-import { TweaksPanel } from "@/components/TweaksPanel";
+import { FlashlightOverlay } from "@/components/Layout/FlashlightOverlay";
+import { AudioIntro } from "@/components/Layout/AudioIntro";
+import { NoiseOverlay } from "@/components/UI/NoiseOverlay";
+import { DetectiveBackground } from "@/components/UI/DetectiveBackground";
 
-const archivoBlack = Archivo_Black({
-  weight: "400",
-  variable: "--font-archivo-black",
+const archivoNarrow = Archivo_Narrow({
+  weight: ["400", "700"],
+  variable: "--font-archivo-narrow",
   subsets: ["latin"],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   weight: ["400", "500", "600", "700"],
-  variable: "--font-space-grotesk",
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  weight: ["400", "500", "700", "800"],
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-});
-
-const playfairDisplay = Playfair_Display({
-  weight: ["700", "900"],
-  variable: "--font-playfair-display",
-  subsets: ["latin"],
-});
-
-const crimsonPro = Crimson_Pro({
-  weight: ["400", "600"],
+const courierPrime = Courier_Prime({
+  weight: ["400", "700"],
   style: ["normal", "italic"],
-  variable: "--font-crimson-pro",
+  variable: "--font-courier-prime",
   subsets: ["latin"],
 });
 
@@ -51,21 +40,29 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={[
-      archivoBlack.variable,
-      spaceGrotesk.variable,
-      jetbrainsMono.variable,
-      playfairDisplay.variable,
-      crimsonPro.variable,
+      archivoNarrow.variable,
+      inter.variable,
+      courierPrime.variable,
     ].join(" ")}>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+        />
+      </head>
       <body>
         <ThemeProvider>
-          <div className="app">
+          <DetectiveBackground/>
+          <NoiseOverlay/>
+          <div id="flashlight-overlay" />
+          <div className="app wood-desk" style={{ position: "relative", zIndex: 1 }}>
             <Nav/>
             <main>
               {children}
             </main>
-            <TweaksPanel/>
           </div>
+          <FlashlightOverlay/>
+          <AudioIntro/>
         </ThemeProvider>
       </body>
     </html>

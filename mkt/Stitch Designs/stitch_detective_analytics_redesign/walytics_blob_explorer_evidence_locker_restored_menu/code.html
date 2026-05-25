@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Blob Explorer | WALYTICS INVESTIGATIONS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;family=Courier+Prime:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#444748",
+                        "primary": "#000000",
+                        "on-tertiary-fixed": "#1c1c15",
+                        "background": "#fdf8f8",
+                        "on-tertiary-container": "#85847b",
+                        "tertiary-fixed": "#e5e2d8",
+                        "outline-variant": "#c4c7c7",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#756050",
+                        "outline": "#747878",
+                        "surface-container": "#f1edec",
+                        "tertiary-container": "#1c1c15",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#f4f0ef",
+                        "secondary-container": "#faddc8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e5e2e1",
+                        "on-primary-fixed-variant": "#474646",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "on-secondary-fixed-variant": "#564334",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f7f3f2",
+                        "surface": "#fdf8f8",
+                        "secondary": "#6f5a4a",
+                        "surface-container-high": "#ebe7e6",
+                        "inverse-surface": "#313030",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c9c7bc",
+                        "surface-variant": "#e5e2e1",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-tertiary-fixed-variant": "#48473f",
+                        "on-background": "#1c1b1b",
+                        "surface-tint": "#5f5e5e",
+                        "on-primary-container": "#858383",
+                        "tertiary": "#000000",
+                        "on-surface": "#1c1b1b",
+                        "inverse-primary": "#c8c6c5",
+                        "surface-bright": "#fdf8f8",
+                        "on-primary-fixed": "#1c1b1b",
+                        "surface-dim": "#ddd9d8",
+                        "secondary-fixed-dim": "#dcc2ad",
+                        "primary-container": "#1c1b1b",
+                        "on-secondary-fixed": "#27180c",
+                        "secondary-fixed": "#faddc8",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "gutter": "1.5rem",
+                        "stack-md": "1rem",
+                        "grid-margin": "2rem",
+                        "stack-lg": "2rem"
+                    },
+                    "fontFamily": {
+                        "display-case": ["Archivo Narrow"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Archivo Narrow"],
+                        "headline-md": ["Archivo Narrow"],
+                        "note-typewriter": ["Courier Prime"],
+                        "label-stamp": ["Courier Prime"]
+                    },
+                    "fontSize": {
+                        "display-case": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "note-typewriter": ["15px", {"lineHeight": "1.4", "fontWeight": "400"}],
+                        "label-stamp": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+        }
+        .ink-bleed {
+            position: relative
+        }
+        .ink-bleed::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuAtNrPb8cKIDoMUzRULODvXk_46K3wwa_Jk1u0Zjk_PbWS3MktdTT1YNjo9mBuuV6NaLxGkQ3jIPxobRZgd7SLcTa5HG4BDsGeySrJ0f7E-6caL-6WvW4cw-_fD0I0lDcU-y9k7d3gWKBDK9pl4Ufr4fcAnjL-Ffv-8NeFu7VD4dbieBm-tilSmkaeXkfgLLU-NC6whXn78FpT8WdomgAH-bO5Wvb18wVJ4juNSYWozLifarolkhFBfm7PK1_6RWHdgs_oPYeQnicA);
+            opacity: 0.05;
+            pointer-events: none
+        }
+        .torn-edge-bottom {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 95%, 98% 97%, 95% 94%, 92% 98%, 88% 95%, 85% 99%, 80% 94%, 75% 97%, 70% 95%, 65% 98%, 60% 94%, 55% 97%, 50% 95%, 45% 98%, 40% 94%, 35% 97%, 30% 95%, 25% 98%, 20% 94%, 15% 97%, 10% 95%, 5% 98%, 0% 95%)
+        }
+        .flashlight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: multiply;
+            display: none
+        }
+        .flashlight-active .flashlight-overlay {
+            display: block;
+            mask-image: radial-gradient(circle 150px at var(--x) var(--y), transparent 80%, black 100%);
+            -webkit-mask-image: radial-gradient(circle 150px at var(--x) var(--y), transparent 80%, black 100%)
+        }
+        @keyframes paper-slide {
+            from {
+                transform: translateY(50px) rotate(2deg);
+                opacity: 0;
+            } to {
+                transform: translateY(0) rotate(var(--rot, 0deg));
+                opacity: 1;
+            }
+        }
+        .animate-paper {
+            animation: paper-slide 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards
+        }
+        .tape-segment {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: rgba(210, 200, 150, 0.4);
+            backdrop-filter: blur(1px);
+            z-index: 10
+        }
+        .active-nav-item::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: black;
+        }
+    </style>
+</head>
+<body class="bg-[#1c1b1b] font-body-md text-on-background selection:bg-secondary-container">
+<!-- Flashlight Overlay -->
+<div class="flashlight-overlay" id="flashlight"></div>
+<!-- Desk Background Wrapper -->
+<div class="fixed inset-0 pointer-events-none z-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA2SCLznnj6lbYKlp0B__95tGC5zvxyLbH1izdzY4elmQJ_FXWjLrGxgaRTen0MBWZh6ms66bTokag-MK_xrm-F-KVAU-wTsrZa1RJrNeO3TRFbcO_jLEsESuUHmaT1qgmJ6QBt24wYrG2pXqiahJ2m3lkADqbQD9BJ4cRYk6nOu2D3eEQ8O7esxnPftAkf-1w3RVUWATCin2MPwt4kLf0qbQodwTBqW3ATVOxSUjmQQF-dMFudleX4t0mwlEYjJN0hRNcAt5eWiYM'); background-size: cover; background-position: center; opacity: 0.2;"></div>
+<!-- Top App Bar - Restored from Screen 12/15 style -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface dark:bg-surface-container-high border-b-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+<div class="flex justify-between items-center w-full px-grid-margin py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<div class="font-display-case text-headline-lg font-extrabold text-primary dark:text-inverse-primary border-r-4 border-primary px-4">WALYTICS</div>
+<span class="font-label-stamp text-label-stamp bg-error text-white px-2 py-1 rotate-[-5deg]">CASE 0042</span>
+</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-display-case text-headline-md uppercase tracking-tight text-on-surface-variant font-medium hover:bg-secondary-container transition-colors px-2" href="#">Dashboard</a>
+<a class="font-display-case text-headline-md uppercase tracking-tight text-primary font-bold relative active-nav-item pb-1 px-2" href="#">Blob Explorer</a>
+<a class="font-display-case text-headline-md uppercase tracking-tight text-on-surface-variant font-medium hover:bg-secondary-container transition-colors px-2" href="#">AI Analytics</a>
+<a class="font-display-case text-headline-md uppercase tracking-tight text-on-surface-variant font-medium hover:bg-secondary-container transition-colors px-2" href="#">Tutorial</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="relative group hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-1 bg-transparent border-2 border-black focus:outline-none font-note-typewriter w-48" placeholder="CASE SEARCH..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary font-display-case text-headline-md px-6 py-2 uppercase hover:translate-x-1 hover:translate-y-1 transition-transform active:translate-x-2 active:translate-y-2 border-2 border-black">OPEN CASE</button>
+</div>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-24 pb-8 w-64 bg-surface-variant dark:bg-inverse-surface border-r-4 border-black z-40 hidden md:flex shadow-[8px_0px_0px_0px_rgba(0,0,0,0.2)]">
+<div class="px-6 mb-8 flex flex-col items-center text-center">
+<img alt="Detective Avatar" class="w-20 h-20 rounded-full border-4 border-primary mb-2 object-cover" data-alt="A detailed, sepia-toned illustration of an anthropomorphic walrus wearing a Victorian-era detective trench coat and a deerstalker hat. He is holding a smoking pipe, standing in a dim, noir-style office with old wooden shelves and scattered papers. The lighting is dramatic and moody, reflecting a classic hardboiled detective aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHRrE-OLCY9N1wtkm9ergUwWUXcUX_UNtnRcYBSAdDjSuOjJU_AeVVBTkYreT5AxScLkFCCKgKGocMVT-eJJWfEevoSJg7Sj0aWDeLXXONZe5X3CwhKLhQZt-kS2taJLxiLsoZEK2iBbuCfSN8lEam_4luCCIUEDkHBy3A2_nayZL4oh-qv7XU7yn29cKKLDSiHe1FN2dfYnWMj7E95vgP9YBpt7Ru5fZxaD80HGaXHum5aR3rEqLlWtwXOQXhooB0_mW0XHHPJA8"/>
+<h2 class="font-display-case text-headline-md text-primary">Walrus Holmes</h2>
+<p class="font-label-stamp text-label-stamp uppercase opacity-70">Consulting Analyst</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-label-stamp text-label-stamp uppercase">Evidence Locker</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-stamp text-label-stamp uppercase">Persons of Interest</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 bg-primary text-on-primary rounded-none border-l-8 border-secondary-fixed shadow-inner" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-stamp text-label-stamp uppercase">Case Logs</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label-stamp text-label-stamp uppercase">Subpoena Archive</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:translate-x-1 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">lock</span>
+<span class="font-label-stamp text-label-stamp uppercase">Vault Access</span>
+</a>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full bg-secondary text-on-secondary font-label-stamp text-label-stamp uppercase py-3 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-secondary-container hover:text-primary transition-all">New Investigation</button>
+</div>
+<div class="mt-auto px-6 flex flex-col gap-2">
+<a class="flex items-center gap-4 text-on-surface-variant opacity-70 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-stamp text-label-stamp uppercase">Settings</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant opacity-70 hover:opacity-100" href="#">
+<span class="material-symbols-outlined">security</span>
+<span class="font-label-stamp text-label-stamp uppercase">Confidential</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pt-28 pb-12 ml-0 md:ml-64 px-grid-margin min-h-screen">
+<!-- Search Warrant Section -->
+<section class="max-w-4xl mx-auto mb-12 animate-paper bg-[#f7f3f2] p-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] relative rotate-[-1deg] ink-bleed">
+<div class="tape-segment -top-2 -left-4 rotate-[-15deg]"></div>
+<div class="tape-segment -top-2 -right-4 rotate-[12deg]"></div>
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div class="flex flex-col">
+<h1 class="font-display-case text-headline-lg uppercase text-primary border-b-2 border-black inline-block">Evidence Search Warrant</h1>
+<p class="font-note-typewriter text-note-typewriter mt-2 italic opacity-60">Serial No: BLOB-992-DELTA</p>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 font-label-stamp text-label-stamp uppercase hover:scale-105 transition-transform" id="flashlightToggle">
+<span class="material-symbols-outlined">flashlight_on</span>
+                    Investigar
+                </button>
+</div>
+<div class="relative mb-6">
+<input class="w-full bg-white/50 border-2 border-dashed border-black p-4 font-note-typewriter text-xl focus:outline-none focus:border-solid" placeholder="IDENTIFY TARGET BLOB ID OR ADDRESS..." type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">fingerprint</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-4 mt-8">
+<!-- Filtering Sticky Notes -->
+<div class="bg-yellow-100 p-4 w-40 h-40 shadow-md rotate-2 flex flex-col justify-between border-t-2 border-yellow-200">
+<span class="font-label-stamp text-label-stamp uppercase text-yellow-800">Publisher</span>
+<select class="bg-transparent border-none font-note-typewriter focus:ring-0 w-full p-0">
+<option>ALL AGENTS</option>
+<option>MYSTICEI</option>
+<option>SUI_ARCHIVE</option>
+</select>
+</div>
+<div class="bg-blue-100 p-4 w-40 h-40 shadow-md -rotate-1 flex flex-col justify-between border-t-2 border-blue-200">
+<span class="font-label-stamp text-label-stamp uppercase text-blue-800">Blob Size</span>
+<select class="bg-transparent border-none font-note-typewriter focus:ring-0 w-full p-0">
+<option>MEGA-SCALE</option>
+<option>MICRO-INTEL</option>
+<option>VAULT-SIZED</option>
+</select>
+</div>
+<div class="bg-green-100 p-4 w-40 h-40 shadow-md rotate-3 flex flex-col justify-between border-t-2 border-green-200">
+<span class="font-label-stamp text-label-stamp uppercase text-green-800">Evidence Type</span>
+<select class="bg-transparent border-none font-note-typewriter focus:ring-0 w-full p-0">
+<option>ALL FILES</option>
+<option>SMART_CONTRACT</option>
+<option>META_BLOB</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Blobs (Evidence Piles) Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 max-w-7xl mx-auto">
+<!-- Evidence Card 1 -->
+<div class="animate-paper bg-surface border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] p-6 ink-bleed relative hover:-translate-y-2 transition-transform duration-300" style="--rot: 1deg">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-black rounded-full shadow-lg flex items-center justify-center">
+<div class="w-1 h-4 bg-white/20 rounded-full"></div>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-error text-on-error font-label-stamp text-[10px] px-2 py-0.5 uppercase rotate-[-3deg]">Confidential</span>
+<span class="font-note-typewriter text-xs opacity-50">#BLOB-4401</span>
+</div>
+<div class="mb-4 aspect-video bg-surface-container-highest overflow-hidden relative border border-black/10">
+<img alt="Blob visualization" class="w-full h-full object-cover mix-blend-multiply opacity-80" data-alt="A dark, cinematic visualization of a digital data 'blob' appearing as a cluster of glowing amber particles swirling in a deep black void. The style is gritty and textured, mimicking old film grain and high-contrast noir photography. Faint topographical grid lines overlap the cluster, giving it the appearance of a tactical reconnaissance photograph." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDrB3Jd3hB50FV10zgL9B2wvI42IcD0PxGQkZzv8hqRtP3-rkpwPwWd9qtoSVoob_F4GeqKdWHH6gaXqxW_TsaHeBjze8PSC35YCO-lq9CBDiB0LGagGkcws80ZhBpg9LDz3ySgxcezKJ81JOQacO6usdsJIMkdMedsaX8C5UtHU0pSXvESvGmYuF5RlXGwDbuT78c-EvRD1OL4IzHxLP0w9Rje2HLyr7md-Ioq0ot3NgBK_5BN5b2-DhldcdFdf4RgbqggioA4aE"/>
+<div class="absolute inset-0 border-4 border-double border-white/10 pointer-events-none"></div>
+</div>
+<h3 class="font-display-case text-headline-md uppercase mb-2">Mysticeti Core Stream</h3>
+<p class="font-note-typewriter text-sm mb-4 line-clamp-3">Interpreted data packets from the primary consensus engine. High frequency activity detected in the sub-zero layer. Evidence suggests rapid horizontal scaling.</p>
+<div class="flex justify-between items-center pt-4 border-t border-black/20">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">history</span>
+<span class="font-label-stamp text-[10px]">2M AGO</span>
+</div>
+<button class="border-2 border-black px-3 py-1 font-label-stamp text-label-stamp hover:bg-primary hover:text-on-primary transition-colors">ANALYZE</button>
+</div>
+<div class="absolute bottom-2 right-2 opacity-20 rotate-12">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">fingerprint</span>
+</div>
+</div>
+<!-- Evidence Card 2 -->
+<div class="animate-paper bg-surface-container-low border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] p-6 ink-bleed relative hover:-translate-y-2 transition-transform duration-300" style="--rot: -2deg">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-black rounded-full shadow-lg flex items-center justify-center">
+<div class="w-1 h-4 bg-white/20 rounded-full"></div>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-primary text-on-primary font-label-stamp text-[10px] px-2 py-0.5 uppercase">VERIFIED</span>
+<span class="font-note-typewriter text-xs opacity-50">#BLOB-8192</span>
+</div>
+<div class="mb-4 aspect-video bg-surface-container-highest overflow-hidden relative border border-black/10">
+<img alt="Blob visualization" class="w-full h-full object-cover mix-blend-multiply opacity-80" data-alt="A macro-photographic style image of an old, weathered punch-card with digital data patterns overlaid in a neon-cyan glow. The background is a dimly lit detective's desk with a cup of dark coffee and a magnifying glass slightly out of focus. The scene is heavy with noir shadows and a tactile, vintage feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-rBXWSxxgVn2s9YfsYWYSh3sR_5IU6sokHA7efQxuq3yvv3LWKw_zyHS4YnhnhSW1OMUvLLKneGywY6dNXO3lvwIEgzKhGxHobE5l_N5eBpsxt7uJwjhDsuj_-KkGvt4puTYLLfdLmD3MRxo8TpGD1lIkh8ahIRdL5qYI6S13jh3fGGvBncqrDxT8GnfKA_HjNmA5ukcjGwr_IcEhwqW6ib6JDVJ5w9ryX_EPoBe78ANAT7MeBSUvELxIt-7w7TW1bmTv55S_exI"/>
+</div>
+<h3 class="font-display-case text-headline-md uppercase mb-2">Infinite Horizons Log</h3>
+<p class="font-note-typewriter text-sm mb-4 line-clamp-3">Historical archive of cross-chain messages. Trace elements of zero-knowledge proofs discovered within the payload header. Requires further decryption.</p>
+<div class="flex justify-between items-center pt-4 border-t border-black/20">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">database</span>
+<span class="font-label-stamp text-[10px]">1.2 GB</span>
+</div>
+<button class="border-2 border-black px-3 py-1 font-label-stamp text-label-stamp hover:bg-primary hover:text-on-primary transition-colors">DECRYPT</button>
+</div>
+</div>
+<!-- Evidence Card 3 -->
+<div class="animate-paper bg-[#fffef0] border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] p-6 ink-bleed relative hover:-translate-y-2 transition-transform duration-300" style="--rot: 0.5deg">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-black rounded-full shadow-lg flex items-center justify-center">
+<div class="w-1 h-4 bg-white/20 rounded-full"></div>
+</div>
+<div class="flex justify-between items-start mb-4">
+<span class="bg-secondary text-on-secondary font-label-stamp text-[10px] px-2 py-0.5 uppercase rotate-[2deg]">TOP SECRET</span>
+<span class="font-note-typewriter text-xs opacity-50">#BLOB-2001</span>
+</div>
+<div class="mb-4 aspect-video bg-surface-container-highest overflow-hidden relative border border-black/10">
+<img alt="Blob visualization" class="w-full h-full object-cover mix-blend-multiply opacity-80" data-alt="A high-contrast, black and white photograph of an abstract, geometric structure resembling a crystalline lattice. The lighting comes from a single harsh source, casting long, sharp shadows. The aesthetic is inspired by 1940s detective film noir cinematography, with heavy grain and dramatic chiaroscuro." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABv9w30XilXzgbQ3TP1_O_AEBfrPBM5uF3MHn09ohTGzQ76jXYDOP0-SeUNq2vPMOoh_qfvARQYXVb_QBLLkmbz2YpcFfwjEF_sLc8wHy0uZWjLwdpvS8YGd5V6B-RScdhQdVNZRWzUFhFbmrIbC92C3IrEvYNEo4si_B79DGq0FO_kpPXk-WhfqY1wYmsZAJARtu8n3OHp7PUoqR-MPXD7AMm3PJwIfnOHKIoWGpKJra-QIDraNZ38ufakE_ha8wCMbKYPV_K1d8"/>
+</div>
+<h3 class="font-display-case text-headline-md uppercase mb-2">ZK-Ready Subpoena</h3>
+<p class="font-note-typewriter text-sm mb-4 line-clamp-3">Formal request for state-transition evidence. All data encrypted via Move-specific security protocols. Validation stamps are present and authentic.</p>
+<div class="flex justify-between items-center pt-4 border-t border-black/20">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">shield</span>
+<span class="font-label-stamp text-[10px]">SECURED</span>
+</div>
+<button class="border-2 border-black px-3 py-1 font-label-stamp text-label-stamp hover:bg-primary hover:text-on-primary transition-colors">VALIDATE</button>
+</div>
+</div>
+<!-- Evidence Card 4 -->
+<div class="animate-paper bg-surface border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] p-6 ink-bleed relative hover:-translate-y-2 transition-transform duration-300 torn-edge-bottom" style="--rot: -1.5deg; animation-delay: 0.2s;">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-black rounded-full shadow-lg flex items-center justify-center">
+<div class="w-1 h-4 bg-white/20 rounded-full"></div>
+</div>
+<div class="mb-4">
+<span class="bg-yellow-400 text-black font-label-stamp text-[10px] px-2 py-0.5 uppercase">URGENT ACTION</span>
+</div>
+<h3 class="font-display-case text-headline-md uppercase mb-2">Smart Contract Leak</h3>
+<p class="font-note-typewriter text-sm mb-8 italic text-red-600">Possible integrity breach in the object-centric model. Immediate inspection required by Chief Analyst Walrus.</p>
+<div class="flex justify-center mb-4">
+<span class="material-symbols-outlined text-primary text-6xl opacity-30">warning</span>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-dashed border-black/30">
+<span class="font-label-stamp text-[10px]">PRIORITY 1</span>
+<button class="bg-black text-white px-6 py-2 font-label-stamp text-label-stamp hover:bg-red-700 transition-colors">INTERVENE</button>
+</div>
+</div>
+<!-- Empty Evidence File -->
+<div class="animate-paper border-2 border-dashed border-black/40 flex flex-col items-center justify-center p-8 opacity-40 hover:opacity-100 transition-opacity cursor-pointer group" style="--rot: 2deg; animation-delay: 0.3s;">
+<span class="material-symbols-outlined text-6xl mb-4 group-hover:scale-110 transition-transform">add_box</span>
+<p class="font-display-case text-headline-md uppercase">Add Evidence</p>
+<p class="font-note-typewriter text-xs mt-2 text-center">Pin a new blob to the dossier for investigation.</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="relative z-10 w-full py-8 px-grid-margin bg-surface-container-high dark:bg-surface-container-highest border-t-2 border-dashed border-outline ink-bleed">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8" style="transform: rotate(-1deg);">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-label-stamp text-label-stamp text-error uppercase mb-2">Top Secret Information</span>
+<p class="font-note-typewriter text-note-typewriter opacity-80 text-center md:text-left">© 1887-2026 WALYTICS INVESTIGATIONS. DO NOT REPRODUCE WITHOUT AUTHORIZATION.</p>
+</div>
+<div class="flex gap-8">
+<a class="font-note-typewriter text-note-typewriter opacity-80 underline decoration-double hover:opacity-100 hover:text-primary transition-opacity" href="#">Privacy Dossier</a>
+<a class="font-note-typewriter text-note-typewriter opacity-80 underline decoration-double hover:opacity-100 hover:text-primary transition-opacity" href="#">Terms of Engagement</a>
+<a class="font-note-typewriter text-note-typewriter opacity-80 underline decoration-double hover:opacity-100 hover:text-primary transition-opacity" href="#">Agency Contact</a>
+</div>
+</div>
+</footer>
+<!-- The Detective's Toolkit (Fixed Bottom Dock) -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center bg-black/90 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 shadow-2xl gap-6">
+<button class="text-white hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined">zoom_in</span>
+</button>
+<div class="w-px h-6 bg-white/20"></div>
+<button class="text-white hover:text-secondary-fixed transition-colors" id="flashlightBtn">
+<span class="material-symbols-outlined">flashlight_on</span>
+</button>
+<div class="w-px h-6 bg-white/20"></div>
+<button class="text-white hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<div class="w-px h-6 bg-white/20"></div>
+<button class="text-white hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</button>
+</div>
+<script>
+        // Flashlight Interaction
+        const body = document.body;
+        const flashlight = document.getElementById('flashlight');
+        const flashlightToggle = document.getElementById('flashlightToggle');
+        const flashlightBtn = document.getElementById('flashlightBtn');
+
+        let flashlightActive = false;
+
+        function toggleFlashlight() {
+            flashlightActive = !flashlightActive;
+            if (flashlightActive) {
+                body.classList.add('flashlight-active');
+            } else {
+                body.classList.remove('flashlight-active');
+            }
+        }
+
+        flashlightToggle.addEventListener('click', toggleFlashlight);
+        flashlightBtn.addEventListener('click', toggleFlashlight);
+
+        document.addEventListener('mousemove', e => {
+            if (flashlightActive) {
+                flashlight.style.setProperty('--x', e.clientX + 'px');
+                flashlight.style.setProperty('--y', e.clientY + 'px');
+            }
+        });
+
+        // Atmospheric Micro-interactions: Cards subtle rotation drift
+        document.querySelectorAll('.animate-paper').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const randomRot = (Math.random() - 0.5) * 4;
+                card.style.transform = `scale(1.02) rotate(${randomRot}deg)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                const rotMatch = card.getAttribute('style').match(/--rot:\s*(-?[\d.]+)deg/);
+                const baseRot = rotMatch ? rotMatch[1] : 0;
+                card.style.transform = `rotate(${baseRot}deg)`;
+            });
+        });
+    </script>
+</body></html>

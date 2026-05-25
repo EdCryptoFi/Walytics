@@ -1,4 +1,4 @@
-import { WalrusHeadMini } from "@/components/Mascot/WalrusHeadMini";
+import { RandomCharacter } from "@/components/UI/RandomCharacter";
 
 export function Typing() {
   return (
@@ -6,11 +6,14 @@ export function Typing() {
       <div style={{
         width: 48, height: 48, flexShrink: 0,
         border: "3px solid var(--ink)", background: "var(--mint)",
-        display: "flex", alignItems: "center", justifyContent: "center"
-      }}><WalrusHeadMini size={36}/></div>
+        display: "flex", alignItems: "center", justifyContent: "center",
+        overflow: "hidden",
+      }}>
+        <RandomCharacter width={48} height={48} alt="Walytics Holmes"/>
+      </div>
       <div style={{ maxWidth: "78%" }}>
         <div className="mono" style={{ fontSize: 9.5, opacity: 0.65, marginBottom: 4, letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
-          WALRUS HOLMES · sleuthing…
+          WALYTICS HOLMES · sleuthing…
         </div>
         <div className="brut" style={{
           padding: "14px 16px", background: "var(--paper)",

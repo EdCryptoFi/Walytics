@@ -94,7 +94,7 @@ export default function DocsPage() {
         kicker="📚 Case file documentation"
         caseNo="W-0042-DOCS"
         title={<>The Casebook.</>}
-        lede="Technical documentation, architecture, and API reference for Walytics — Walrus Holmes Edition."
+        lede="Technical documentation, architecture, and API reference for Walytics — Walytics Holmes Edition."
       />
 
       <div style={{ display: "flex", flexDirection: "column", gap: 22, marginBottom: 22 }}>

@@ -1,5 +1,5 @@
-import { WalrusHeadMini } from "@/components/Mascot/WalrusHeadMini";
 import { CitedCard } from "./CitedCard";
+import { RandomCharacter } from "@/components/UI/RandomCharacter";
 import type { ChatMessage } from "@/types";
 
 interface BubbleProps {
@@ -26,11 +26,13 @@ export function Bubble({ msg, time }: BubbleProps) {
         display: "flex", alignItems: "center", justifyContent: "center",
         fontFamily: "var(--font-display)", fontSize: 18
       }}>
-        {isUser ? "YOU" : <WalrusHeadMini size={36}/>}
+        {isUser ? "YOU" : (
+          <RandomCharacter width={42} height={42} alt="Walytics Holmes"/>
+        )}
       </div>
       <div style={{ maxWidth: "78%", display: "flex", flexDirection: "column", alignItems: isUser ? "flex-end" : "flex-start" }}>
         <div className="mono" style={{ fontSize: 9.5, opacity: 0.65, marginBottom: 4, letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
-          {isUser ? `WATSON · ${time ?? ""}` : `WALRUS HOLMES · ${time ?? ""}`}
+          {isUser ? `WATSON · ${time ?? ""}` : `WALYTICS HOLMES · ${time ?? ""}`}
         </div>
         <div className="brut" style={{
           padding: "12px 14px",

@@ -1,5 +1,127 @@
 import type { BlobInfo, WalrusMetrics } from "@/types"
 
+const WALRUS_PACKAGE = process.env.WALRUS_PACKAGE_ID || ""
+const SUI_GRAPHQL = "https://sui-mainnet.mystenlabs.com/graphql"
+
+// ── Real data fetching via Sui GraphQL ──────────────────────────
+
+async function fetchRealBlobs(limit: number): Promise<BlobInfo[] | null> {
+  if (!WALRUS_PACKAGE) return null
+
+  const query = `{
+    events(
+      filter: { eventType: "${WALRUS_PACKAGE}::blob::BlobRegistered" }
+      first: ${limit}
+    ) {
+      nodes {
+        json
+        sender
+        timestamp
+      }
+    }
+  }`
+
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+
+    const res = await fetch(SUI_GRAPHQL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+      signal: controller.signal,
+    })
+    clearTimeout(timeout)
+
+    if (!res.ok) return null
+
+    const data = await res.json() as {
+      data?: { events?: { nodes?: { json: string; sender: string; timestamp: string }[] } }
+    }
+
+    const nodes = data?.data?.events?.nodes
+    if (!Array.isArray(nodes) || nodes.length === 0) return null
+
+    return nodes.map((n) => {
+      let parsed: Record<string, unknown> = {}
+      try { parsed = JSON.parse(n.json || "{}") } catch { /* ignore */ }
+
+      return {
+        id: String(parsed.blob_id || parsed.id || `0x${Date.now().toString(16)}`),
+        publisher: n.sender || "unknown",
+        size: Number(parsed.size || parsed.unencoded_length || 0),
+        storageType: String(parsed.encoding_type || "RedStuff"),
+        timestamp: Math.floor(new Date(n.timestamp).getTime() / 1000),
+        digest: String(parsed.root_hash || ""),
+        erasureCodeType: "redStuff",
+      }
+    })
+  } catch {
+    return null
+  }
+}
+
+async function fetchRealMetrics(): Promise<Partial<WalrusMetrics> | null> {
+  if (!WALRUS_PACKAGE) return null
+
+  // Query aggregated counts via Sui GraphQL
+  const query = `{
+    events(
+      filter: { eventType: "${WALRUS_PACKAGE}::blob::BlobRegistered" }
+      first: 200
+    ) {
+      nodes {
+        json
+        sender
+        timestamp
+      }
+      pageInfo { hasNextPage }
+    }
+  }`
+
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 10000)
+
+    const res = await fetch(SUI_GRAPHQL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+      signal: controller.signal,
+    })
+    clearTimeout(timeout)
+
+    if (!res.ok) return null
+
+    const data = await res.json() as {
+      data?: { events?: { nodes?: { json: string; sender: string; timestamp: string }[] } }
+    }
+
+    const nodes = data?.data?.events?.nodes
+    if (!Array.isArray(nodes) || nodes.length === 0) return null
+
+    const blobs: BlobInfo[] = nodes.map((n) => {
+      let parsed: Record<string, unknown> = {}
+      try { parsed = JSON.parse(n.json || "{}") } catch { /* ignore */ }
+      return {
+        id: String(parsed.blob_id || `0x${Date.now()}`),
+        publisher: n.sender || "unknown",
+        size: Number(parsed.size || parsed.unencoded_length || 0),
+        storageType: String(parsed.encoding_type || "RedStuff"),
+        timestamp: Math.floor(new Date(n.timestamp).getTime() / 1000),
+        digest: String(parsed.root_hash || ""),
+        erasureCodeType: "redStuff",
+      }
+    })
+
+    return computeMetrics(blobs)
+  } catch {
+    return null
+  }
+}
+
+// ── Mock fallback ────────────────────────────────────────────────
+
 const MOCK_PUBLISHERS = [
   { address: "0xd4e83c7f5b2a1960e8f4d9c3b7a6e5f0c8d2a931", label: "Sui Capy Storage" },
   { address: "0x91bf4a8d6e3c7f2b0a5d9e8c1f4b7a3d6e0fc042", label: "WalrusVault Pro" },
@@ -42,24 +164,35 @@ function generateMockBlobs(count: number): BlobInfo[] {
 
 const mockBlobs = generateMockBlobs(500)
 
+// ── Public API ───────────────────────────────────────────────────
+
 export async function queryWalrusBlobs(
   _cursor?: string,
   limit = 50
 ): Promise<{ blobs: BlobInfo[]; nextCursor?: string }> {
+  const real = await fetchRealBlobs(limit)
+  if (real && real.length > 0) {
+    return { blobs: real }
+  }
+
+  // mock fallback
   const start = _cursor ? parseInt(_cursor) : 0
   const end = start + limit
-  const page = mockBlobs.slice(start, end)
-
   return {
-    blobs: page,
+    blobs: mockBlobs.slice(start, end),
     nextCursor: end < mockBlobs.length ? String(end) : undefined,
   }
 }
 
 export async function getAggregatedMetrics(): Promise<WalrusMetrics> {
-  const blobs = mockBlobs
-  return computeMetrics(blobs)
+  const real = await fetchRealMetrics()
+  if (real && real.totalBlobs && real.totalBlobs > 0) {
+    return real as WalrusMetrics
+  }
+  return computeMetrics(mockBlobs)
 }
+
+// ── Compute ──────────────────────────────────────────────────────
 
 function computeMetrics(blobs: BlobInfo[]): WalrusMetrics {
   const totalBlobs = blobs.length
@@ -97,7 +230,7 @@ function computeMetrics(blobs: BlobInfo[]): WalrusMetrics {
   const publisherLabels = new Map(MOCK_PUBLISHERS.map(p => [p.address, p.label]))
 
   const topPublishers = [...publisherMap.entries()]
-    .map(([address, data]) => ({ address, label: publisherLabels.get(address) ?? "Unknown", ...data }))
+    .map(([address, data]) => ({ address, label: publisherLabels.get(address) ?? address.slice(0, 10) + "…", ...data }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 10)
 
