@@ -9,6 +9,7 @@ interface BubbleProps {
 
 export function Bubble({ msg, time }: BubbleProps) {
   const isUser = msg.role === "user";
+  const isLong = msg.content.length > 120;
   const formatted = msg.content
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono);background:rgba(0,0,0,0.08);padding:1px 5px;font-size:0.92em">$1</code>');
@@ -31,16 +32,49 @@ export function Bubble({ msg, time }: BubbleProps) {
         )}
       </div>
       <div style={{ maxWidth: "78%", display: "flex", flexDirection: "column", alignItems: isUser ? "flex-end" : "flex-start" }}>
-        <div className="mono" style={{ fontSize: 9.5, opacity: 0.65, marginBottom: 4, letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
-          {isUser ? `WATSON · ${time ?? ""}` : `WALYTICS HOLMES · ${time ?? ""}`}
+        {/* Timestamp header */}
+        {isUser ? (
+          <div className="mono" style={{ fontSize: 9.5, opacity: 0.65, marginBottom: 4, letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+            WATSON · {time ?? ""}
+          </div>
+        ) : (
+          <div className="mono" style={{
+            fontSize: 9.5, opacity: 0.65, marginBottom: 4, letterSpacing: "0.1em",
+            whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 4,
+            borderBottom: "1px solid rgba(0,0,0,0.12)", paddingBottom: 3
+          }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 12, opacity: 0.7 }}>schedule</span>
+            RECEIVED · WALYTICS HOLMES · {time ?? ""}
+          </div>
+        )}
+        <div style={{
+          position: "relative",
+          transform: isUser ? "rotate(0.5deg)" : "none",
+        }}>
+          {/* Tape corner effect on long AI messages */}
+          {!isUser && isLong && (
+            <div className="tape" style={{
+              position: "absolute", top: -9, left: 14, width: 60, height: 16, zIndex: 2,
+            }}/>
+          )}
+          {/* Fingerprint watermark on AI messages */}
+          {!isUser && (
+            <span className="material-symbols-outlined" style={{
+              position: "absolute", bottom: 8, right: 10,
+              fontSize: 48, opacity: 0.08, color: "var(--ink)",
+              pointerEvents: "none", zIndex: 0,
+            }}>fingerprint</span>
+          )}
+          <div className="brut" style={{
+            padding: "12px 14px",
+            background: isUser ? "var(--paper-2)" : "var(--paper)",
+            boxShadow: "4px 4px 0 0 var(--ink)",
+            fontSize: 14, lineHeight: 1.5,
+            whiteSpace: "pre-wrap",
+            position: "relative", zIndex: 1,
+            ...(isUser ? { textDecoration: "underline", textDecorationStyle: "dotted" as const, textDecorationColor: "rgba(0,0,0,0.25)", textUnderlineOffset: "3px" } : {}),
+          }} dangerouslySetInnerHTML={{ __html: formatted }}/>
         </div>
-        <div className="brut" style={{
-          padding: "12px 14px",
-          background: isUser ? "var(--gold)" : "var(--paper)",
-          boxShadow: "4px 4px 0 0 var(--ink)",
-          fontSize: 14, lineHeight: 1.5,
-          whiteSpace: "pre-wrap"
-        }} dangerouslySetInnerHTML={{ __html: formatted }}/>
         {(msg as { cited?: { kind: string; label?: string; count?: number } }).cited && (
           <CitedCard cited={(msg as { cited: { kind: string; label?: string; count?: number } }).cited}/>
         )}

@@ -9,6 +9,7 @@ const links = [
   { id: "explorer",  href: "/explorer", label: "Blob Explorer" },
   { id: "chat",      href: "/chat",     label: "AI Analytics" },
   { id: "tutorial",  href: "/tutorial", label: "Tutorial" },
+  { id: "docs",      href: "/docs",     label: "Docs" },
 ];
 
 export function Nav() {

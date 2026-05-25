@@ -5,16 +5,11 @@ const BG_URL = "https://lh3.googleusercontent.com/aida-public/AB6AXuA2SCLznnj6lb
 export function DetectiveBackground() {
   return (
     <>
-      {/* Base dark layer */}
+      {/* Detective board photo with dark base fallback */}
       <div style={{
         position: "fixed", inset: 0, zIndex: -3,
         background: "#0e0b08",
-      }}/>
-
-      {/* Detective board photo — fills viewport, no tiling */}
-      <div style={{
-        position: "fixed", inset: 0, zIndex: -2,
-        backgroundImage: `url('/desk-bg.jpg'), url('${BG_URL}')`,
+        backgroundImage: `url('${BG_URL}')`,
         backgroundSize: "cover",
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
@@ -22,10 +17,13 @@ export function DetectiveBackground() {
         filter: "brightness(0.85) saturate(0.8) sepia(0.2)",
       }}/>
 
-      {/* Soft vignette overlay */}
+      {/* Vignette + warm top glow combined */}
       <div style={{
         position: "fixed", inset: 0, zIndex: -1,
-        background: "radial-gradient(ellipse 90% 70% at 50% 50%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.35) 100%)",
+        background: `
+          radial-gradient(ellipse 60% 40% at 50% 0%, rgba(180,120,50,0.06) 0%, transparent 70%),
+          radial-gradient(ellipse 90% 70% at 50% 50%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.4) 100%)
+        `,
         pointerEvents: "none",
       }}/>
     </>

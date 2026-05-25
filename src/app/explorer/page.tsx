@@ -32,6 +32,10 @@ const BLOB_IMAGES = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuABv9w30XilXzgbQ3TP1_O_AEBfrPBM5uF3MHn09ohTGzQ76jXYDOP0-SeUNq2vPMOoh_qfvARQYXVb_QBLLkmbz2YpcFfwjEF_sLc8wHy0uZWjLwdpvS8YGd5V6B-RScdhQdVNZRWzUFhFbmrIbC92C3IrEvYNEo4si_B79DGq0FO_kpPXk-WhfqY1wYmsZAJARtu8n3OHp7PUoqR-MPXD7AMm3PJwIfnOHKIoWGpKJra-QIDraNZ38ufakE_ha8wCMbKYPV_K1d8",
 ];
 
+const STAMP_LABELS = ["CONFIDENTIAL", "VERIFIED", "CLASSIFIED", "TOP SECRET", "EVIDENCE"];
+const STAMP_ROTATIONS = [-6, 4, -3, 7, -5];
+const STAMP_COLORS = ["var(--error)", "var(--mint-deep)", "var(--secondary)", "var(--rust)", "var(--tweed)"];
+
 function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; idx: number; onClick: () => void; onAnalyze: () => void; active: boolean }) {
   const verdict = getVerdict(blob.id);
   const shortId = blob.id.slice(0, 8).toUpperCase();
@@ -40,6 +44,12 @@ function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; i
   const tilt = tilts[idx % tilts.length];
   const imgSrc = BLOB_IMAGES[idx % BLOB_IMAGES.length];
   const dateStr = new Date(blob.timestamp * 1000).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "2-digit" });
+
+  // Deterministic stamp selection per card
+  const stampIdx = Math.abs(shortId.charCodeAt(0) + shortId.charCodeAt(1)) % STAMP_LABELS.length;
+  const stampLabel = STAMP_LABELS[stampIdx];
+  const stampRotation = STAMP_ROTATIONS[stampIdx];
+  const stampColor = STAMP_COLORS[stampIdx];
 
   return (
     <div
@@ -51,6 +61,7 @@ function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; i
         transform: `rotate(${tilt}deg)`,
         outline: active ? "3px solid var(--secondary)" : "none",
         outlineOffset: 4,
+        transition: "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease",
       } as CSSProperties}
     >
       {/* SVG Pushpin */}
@@ -64,6 +75,19 @@ function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; i
           <line x1="11" y1="17" x2="11" y2="27" stroke="#3a2010" strokeWidth="2" strokeLinecap="round"/>
         </svg>
       </div>
+
+      {/* Fingerprint watermark */}
+      <span className="material-symbols-outlined fingerprint-watermark" aria-hidden="true">
+        fingerprint
+      </span>
+
+      {/* Stamp badge (CONFIDENTIAL, VERIFIED, etc.) */}
+      <div className="evidence-stamp-badge" style={{
+        bottom: 48, left: 6,
+        color: stampColor,
+        transform: `rotate(${stampRotation}deg)`,
+        background: "rgba(247,244,239,0.85)",
+      }}>{stampLabel}</div>
 
       {/* Photo area */}
       <div className="polaroid-photo" style={{ aspectRatio: "1/1", marginBottom: 0 }}>
@@ -113,7 +137,7 @@ function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; i
           color: "#3a2a1a", letterSpacing: "0.04em",
           whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%",
         }}>
-          {blob.publisher.slice(0, 16)}{blob.publisher.length > 16 ? "…" : ""}
+          {blob.publisher.slice(0, 16)}{blob.publisher.length > 16 ? "..." : ""}
         </div>
         <div style={{
           fontFamily: "var(--font-mono)", fontSize: 9.5, color: "#6a5a4a",
@@ -132,9 +156,13 @@ function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; i
             border: "none",
             boxShadow: "0 2px 6px rgba(0,0,0,0.28)",
             cursor: "pointer",
+            transition: "background 0.2s ease, transform 0.15s ease",
           }}
         >
-          ANALYZE
+          <span style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 12 }}>search</span>
+            ANALYZE
+          </span>
         </button>
       </div>
     </div>
@@ -179,11 +207,12 @@ export default function ExplorerPage() {
 
           {/* Search Warrant section — rotated dossier */}
           <section
-            className="animate-on-load ink-bleed"
+            className="animate-on-load ink-bleed tape-corner"
             style={{
               "--initial-rotation": "-1deg",
               animationDelay: "0.1s",
               background: "var(--surface)",
+              backgroundImage: "repeating-linear-gradient(45deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 4px, rgba(0,0,0,0.012) 5px)",
               border: "4px solid var(--ink)",
               boxShadow: "8px 8px 0 0 rgba(0,0,0,0.15)",
               padding: "28px 32px 32px",
@@ -191,27 +220,51 @@ export default function ExplorerPage() {
               position: "relative",
             } as CSSProperties}
           >
-            {/* tape corners */}
-            <div style={{ position: "absolute", top: -8, left: -14, width: 50, height: 18, background: "rgba(220,194,140,0.55)", transform: "rotate(-15deg)", border: "1px solid rgba(0,0,0,0.1)" }}/>
-            <div style={{ position: "absolute", top: -8, right: -14, width: 50, height: 18, background: "rgba(220,194,140,0.55)", transform: "rotate(12deg)", border: "1px solid rgba(0,0,0,0.1)" }}/>
+            {/* bottom tape corners */}
+            <div style={{ position: "absolute", bottom: -6, left: -10, width: 46, height: 16, background: "rgba(220,194,140,0.45)", transform: "rotate(16deg)", border: "1px solid rgba(0,0,0,0.08)", zIndex: 2 }}/>
+            <div style={{ position: "absolute", bottom: -6, right: -10, width: 46, height: 16, background: "rgba(220,194,140,0.45)", transform: "rotate(-12deg)", border: "1px solid rgba(0,0,0,0.08)", zIndex: 2 }}/>
+
+            {/* Faded watermark text behind header */}
+            <div style={{
+              position: "absolute", top: "50%", left: "50%",
+              transform: "translate(-50%, -50%) rotate(-12deg)",
+              fontFamily: "var(--font-display)", fontSize: 72,
+              fontWeight: 800, textTransform: "uppercase",
+              color: "var(--ink)", opacity: 0.03,
+              letterSpacing: "0.1em", whiteSpace: "nowrap",
+              pointerEvents: "none", userSelect: "none",
+            }}>EVIDENCE LOCKER</div>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24, gap: 16 }}>
               <div>
-                <h1 className="h-display" style={{ fontSize: 30, borderBottom: "2px solid var(--ink)", paddingBottom: 4, marginBottom: 6 }}>
-                  Evidence Search Warrant
-                </h1>
-                <p className="mono" style={{ fontSize: 12, fontStyle: "italic", opacity: 0.55 }}>
-                  Serial No: BLOB-992-DELTA
-                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 28, color: "var(--ink)" }}>gavel</span>
+                  <h1 className="h-display" style={{ fontSize: 30, borderBottom: "2px solid var(--ink)", paddingBottom: 4, marginBottom: 0 }}>
+                    Evidence Search Warrant
+                  </h1>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <p className="mono" style={{ fontSize: 12, fontStyle: "italic", opacity: 0.55, margin: 0 }}>
+                    Serial No: BLOB-992-DELTA
+                  </p>
+                  <span className="mono" style={{ fontSize: 9, opacity: 0.4, letterSpacing: "0.1em" }}>
+                    ISSUED: {new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase()}
+                  </span>
+                </div>
               </div>
-              <button
-                className="btn"
-                onClick={toggleFlashlight}
-                style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>flashlight_on</span>
-                Investigate
-              </button>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
+                <button
+                  className="btn"
+                  onClick={toggleFlashlight}
+                  style={{ display: "flex", alignItems: "center", gap: 6 }}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>flashlight_on</span>
+                  Investigate
+                </button>
+                <span className="mono" style={{ fontSize: 8, opacity: 0.35, letterSpacing: "0.12em" }}>
+                  {filtered.length} ITEMS IN EVIDENCE
+                </span>
+              </div>
             </div>
 
             {/* Search field */}
@@ -240,62 +293,81 @@ export default function ExplorerPage() {
             {/* Sticky note filters */}
             <div style={{ display: "flex", gap: 20, flexWrap: "wrap" }}>
               {/* Yellow — Publisher */}
-              <div style={{
-                background: "#fef9c3", padding: 14,
+              <div className="bubble-anim" style={{
+                background: "var(--sticky)", padding: 14,
                 width: 150, height: 150,
                 boxShadow: "3px 4px 8px rgba(0,0,0,0.2)",
                 transform: "rotate(2deg)",
-                borderTop: "3px solid #fde047",
+                borderTop: "3px solid #e6d54a",
                 display: "flex", flexDirection: "column", justifyContent: "space-between",
+                position: "relative",
+                animationDelay: "0s",
               }}>
-                <span className="mono" style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: "#854d0e", letterSpacing: "0.08em" }}>Publisher</span>
+                <div>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, color: "#854d0e", marginBottom: 2, display: "block" }}>person_search</span>
+                  <span className="mono" style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: "#854d0e", letterSpacing: "0.08em" }}>Publisher</span>
+                </div>
                 <select value={publisher} onChange={e => setPub(e.target.value)}
                   className="mono"
-                  style={{ background: "transparent", border: "none", fontSize: 12, outline: "none", width: "100%", cursor: "pointer" }}>
+                  style={{ background: "transparent", border: "none", fontSize: 12, outline: "none", width: "100%", cursor: "pointer", color: "#854d0e" }}>
                   <option>ALL AGENTS</option>
                   {[...new Set(blobs.map(b => b.publisher.slice(0, 16)))].slice(0, 8).map(p => (
                     <option key={p}>{p}</option>
                   ))}
                 </select>
+                {/* Tape fold effect */}
+                <div style={{ position: "absolute", bottom: 0, right: 0, width: 20, height: 20, background: "linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.06) 50%)" }}/>
               </div>
 
               {/* Blue — Size */}
-              <div style={{
+              <div className="bubble-anim" style={{
                 background: "#dbeafe", padding: 14,
                 width: 150, height: 150,
                 boxShadow: "3px 4px 8px rgba(0,0,0,0.2)",
                 transform: "rotate(-1deg)",
                 borderTop: "3px solid #93c5fd",
                 display: "flex", flexDirection: "column", justifyContent: "space-between",
+                position: "relative",
+                animationDelay: "0.6s",
               }}>
-                <span className="mono" style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: "#1e3a8a", letterSpacing: "0.08em" }}>Blob Size</span>
+                <div>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, color: "#1e3a8a", marginBottom: 2, display: "block" }}>scale</span>
+                  <span className="mono" style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: "#1e3a8a", letterSpacing: "0.08em" }}>Blob Size</span>
+                </div>
                 <select value={sizeFilter} onChange={e => setSize(e.target.value)}
                   className="mono"
-                  style={{ background: "transparent", border: "none", fontSize: 12, outline: "none", width: "100%", cursor: "pointer" }}>
+                  style={{ background: "transparent", border: "none", fontSize: 12, outline: "none", width: "100%", cursor: "pointer", color: "#1e3a8a" }}>
                   <option>ALL SIZES</option>
                   <option>MEGA-SCALE (&gt;10MB)</option>
                   <option>MICRO-INTEL (&lt;1KB)</option>
                   <option>VAULT-SIZED</option>
                 </select>
+                <div style={{ position: "absolute", bottom: 0, right: 0, width: 20, height: 20, background: "linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.06) 50%)" }}/>
               </div>
 
               {/* Green — Type */}
-              <div style={{
+              <div className="bubble-anim" style={{
                 background: "#dcfce7", padding: 14,
                 width: 150, height: 150,
                 boxShadow: "3px 4px 8px rgba(0,0,0,0.2)",
                 transform: "rotate(3deg)",
                 borderTop: "3px solid #86efac",
                 display: "flex", flexDirection: "column", justifyContent: "space-between",
+                position: "relative",
+                animationDelay: "1.2s",
               }}>
-                <span className="mono" style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: "#14532d", letterSpacing: "0.08em" }}>Evidence Type</span>
+                <div>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, color: "#14532d", marginBottom: 2, display: "block" }}>folder_special</span>
+                  <span className="mono" style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", color: "#14532d", letterSpacing: "0.08em" }}>Evidence Type</span>
+                </div>
                 <select value={typeFilter} onChange={e => setType(e.target.value)}
                   className="mono"
-                  style={{ background: "transparent", border: "none", fontSize: 12, outline: "none", width: "100%", cursor: "pointer" }}>
+                  style={{ background: "transparent", border: "none", fontSize: 12, outline: "none", width: "100%", cursor: "pointer", color: "#14532d" }}>
                   <option>ALL FILES</option>
                   <option>SMART_CONTRACT</option>
                   <option>META_BLOB</option>
                 </select>
+                <div style={{ position: "absolute", bottom: 0, right: 0, width: 20, height: 20, background: "linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.06) 50%)" }}/>
               </div>
             </div>
           </section>

@@ -15,7 +15,7 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
     title: "Architecture",
     kicker: "🏗️ How it's built",
     nodes: [
-      { label: "Frontend",    value: "Next.js 16 (App Router), Tailwind v4" },
+      { label: "Frontend",    value: "Next.js 16 (App Router), CSS Custom Properties" },
       { label: "Backend API", value: "Next.js API Routes (serverless)" },
       { label: "Blockchain",  value: "Tatum Sui RPC (sui-mainnet.gateway.tatum.io)" },
       { label: "AI Engine",   value: "Google Gemini 2.0 Flash" },
@@ -48,7 +48,7 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
       "Endpoint: https://sui-mainnet.gateway.tatum.io",
       "Auth: x-api-key header",
       "Methods: sui_getLatestCheckpointSequenceNumber, suix_getOwnedObjects",
-      "SDK: @tatumio/tatum (configured in src/lib/tatum.ts)",
+      "Direct fetch wrapper (configured in src/lib/tatum.ts)",
     ],
   },
   {

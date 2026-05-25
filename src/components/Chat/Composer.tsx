@@ -29,24 +29,43 @@ export function Composer({ onSend, disabled }: ComposerProps) {
         }}>
           ASK<br/>HOLMES
         </div>
-        <textarea
-          value={v}
-          onChange={e => setV(e.target.value)}
-          onKeyDown={onKey}
-          placeholder="Type your inquiry, Watson. Shift+Enter for a new line."
+        <div style={{ flex: 1, display: "flex", alignItems: "flex-start", position: "relative" }}>
+          <span className="material-symbols-outlined" style={{
+            position: "absolute", left: 10, top: 16,
+            fontSize: 18, opacity: 0.3, color: "var(--ink)", pointerEvents: "none"
+          }}>keyboard</span>
+          <textarea
+            value={v}
+            onChange={e => setV(e.target.value)}
+            onKeyDown={onKey}
+            placeholder="Type your inquiry, Watson. Shift+Enter for a new line."
+            style={{
+              flex: 1, border: "none", outline: "none",
+              padding: "14px 14px 14px 34px",
+              fontFamily: "var(--font-body)", fontSize: 15,
+              background: "transparent", color: "var(--ink)",
+              resize: "none", minHeight: 60, maxHeight: 160
+            }}
+            disabled={disabled}
+          />
+        </div>
+        <button
+          onClick={() => {}}
+          title="Flashlight mode"
           style={{
-            flex: 1, border: "none", outline: "none",
-            padding: "14px 14px",
-            fontFamily: "var(--font-body)", fontSize: 15,
-            background: "transparent", color: "var(--ink)",
-            resize: "none", minHeight: 60, maxHeight: 160
+            margin: "6px 0 6px 0", padding: "0 10px",
+            border: "none", background: "transparent",
+            cursor: "pointer", display: "flex", alignItems: "center",
+            color: "var(--ink)", opacity: 0.5,
           }}
-          disabled={disabled}
-        />
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>flashlight_on</span>
+        </button>
         <button onClick={submit} disabled={disabled || !v.trim()} className="btn btn-primary" style={{
           margin: 6, padding: "0 18px", border: "3px solid var(--ink)",
-          boxShadow: "3px 3px 0 0 var(--gold)",
-          opacity: (!v.trim() || disabled) ? 0.4 : 1
+          boxShadow: "4px 4px 0 0 var(--gold), 0 6px 16px rgba(0,0,0,0.3)",
+          opacity: (!v.trim() || disabled) ? 0.4 : 1,
+          transition: "all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1)",
         }}>
           <IconLoupe size={16}/> SEND
         </button>

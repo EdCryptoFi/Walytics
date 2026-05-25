@@ -20,26 +20,50 @@ export function Footer() {
     <footer style={{
       borderTop: "4px solid var(--ink)",
       marginTop: 56,
-      padding: "24px 0 40px",
-      display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24,
-      flexWrap: "wrap",
+      padding: "32px 0 48px",
+      display: "flex", flexDirection: "column", gap: 24,
     }}>
-      <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
-        <RandomCharacter width={48} height={48} alt="Walytics" style={{ border: "1px solid var(--ink)" }}/>
-        <div>
-          <div className="h-display" style={{ fontSize: 20, color: "var(--ink)" }}>Walytics</div>
-          <div className="mono" style={{ fontSize: 10, opacity: 0.6, letterSpacing: "0.12em" }}>
-            WALRUS PROTOCOL · SUI · TATUM RPC
+      {/* Top row: logo + quote */}
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center", gap: 24,
+        flexWrap: "wrap",
+      }}>
+        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <RandomCharacter width={48} height={48} alt="Walytics" style={{ border: "1px solid var(--ink)" }}/>
+          <div>
+            <div className="h-display" style={{ fontSize: 20, color: "var(--ink)" }}>Walytics</div>
+            <div className="mono" style={{ fontSize: 10, opacity: 0.6, letterSpacing: "0.12em" }}>
+              WALRUS PROTOCOL · SUI · TATUM RPC
+            </div>
           </div>
         </div>
+        <div className="mono" style={{
+          fontSize: 12, opacity: 0.65, fontStyle: "italic",
+          textAlign: "right", maxWidth: 380, lineHeight: 1.5,
+          transform: "rotate(-1deg)",
+        }}>
+          &ldquo;{pick}&rdquo;<br/>
+          <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            — Walytics Holmes, Consulting Analyst
+          </span>
+        </div>
       </div>
-      <div className="mono" style={{
-        fontSize: 12, opacity: 0.65, fontStyle: "italic",
-        textAlign: "right", maxWidth: 380, lineHeight: 1.5,
+
+      {/* Divider */}
+      <hr style={{ border: "none", borderTop: "2px dashed var(--outline)", margin: 0 }}/>
+
+      {/* Bottom row: links + copyright */}
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 20,
+        flexWrap: "wrap",
       }}>
-        &ldquo;{pick}&rdquo;<br/>
-        <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          — Walytics Holmes, Consulting Analyst
+        <div className="footer-links">
+          <a href="#">Privacy Dossier</a>
+          <a href="#">Terms of Engagement</a>
+          <a href="#">Agency Contact</a>
+        </div>
+        <span className="footer-copyright">
+          &copy; 1887-2026 WALYTICS INVESTIGATIONS. TOP SECRET.
         </span>
       </div>
     </footer>

@@ -23,32 +23,89 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json()
+    let body: unknown
+    try {
+      body = await req.json()
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON in request body." },
+        { status: 400, headers: rateLimitHeaders(limit) }
+      )
+    }
 
     const validated = validateBody(body, {
       message: { type: "string", required: true, minLength: 1, maxLength: 2000, sanitize: true },
       generateReport: { type: "boolean", required: false },
     })
 
-    const metrics = await getAggregatedMetrics()
+    let metrics
+    try {
+      metrics = await getAggregatedMetrics()
+    } catch (metricsError) {
+      logger.error("Failed to fetch Walrus metrics", {
+        route,
+        ip,
+        error: String(metricsError),
+        duration: Date.now() - start,
+      })
+      return NextResponse.json(
+        { error: "Unable to fetch Walrus network data. Please try again later." },
+        { status: 502, headers: rateLimitHeaders(limit) }
+      )
+    }
+
     const metricsContext = JSON.stringify(metrics, null, 2)
 
     let response: string
 
-    if (validated.generateReport) {
-      response = await generateReport(metricsContext)
-      logger.info("Report generated", {
+    try {
+      if (validated.generateReport) {
+        response = await generateReport(metricsContext)
+        logger.info("Report generated", {
+          route,
+          ip,
+          duration: Date.now() - start,
+        })
+      } else {
+        response = await chatWithContext(String(validated.message), metricsContext)
+        logger.info("Chat response sent", {
+          route,
+          ip,
+          duration: Date.now() - start,
+        })
+      }
+    } catch (aiError) {
+      const errorMessage = String(aiError)
+      logger.error("Gemini API call failed", {
         route,
         ip,
+        error: errorMessage,
         duration: Date.now() - start,
       })
-    } else {
-      response = await chatWithContext(String(validated.message), metricsContext)
-      logger.info("Chat response sent", {
-        route,
-        ip,
-        duration: Date.now() - start,
-      })
+
+      if (errorMessage.includes("API_KEY") || errorMessage.includes("api key")) {
+        return NextResponse.json(
+          { error: "AI service configuration error. Please contact support." },
+          { status: 500, headers: rateLimitHeaders(limit) }
+        )
+      }
+      if (errorMessage.includes("404") || errorMessage.includes("not found")) {
+        return NextResponse.json(
+          { error: "AI model unavailable. Please try again later." },
+          { status: 502, headers: rateLimitHeaders(limit) }
+        )
+      }
+      if (errorMessage.includes("429") || errorMessage.includes("quota")) {
+        return NextResponse.json(
+          { error: "AI service rate limit reached. Please wait a moment and try again." },
+          { status: 429, headers: rateLimitHeaders(limit) }
+        )
+      }
+
+      return NextResponse.json(
+        { error: "Holmes is temporarily unavailable. Please try again." },
+        { status: 502, headers: rateLimitHeaders(limit) }
+      )
     }
 
     return NextResponse.json(
@@ -63,14 +120,14 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    logger.error("Chat failed", {
+    logger.error("Chat failed unexpectedly", {
       route,
       ip,
       error: String(error),
       duration: Date.now() - start,
     })
     return NextResponse.json(
-      { error: "Chat failed. Please try again." },
+      { error: "An unexpected error occurred. Please try again." },
       { status: 500, headers: rateLimitHeaders(limit) }
     )
   }

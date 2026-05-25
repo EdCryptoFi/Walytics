@@ -14,6 +14,7 @@ import { QuickActions } from "@/components/Dashboard/QuickActions";
 import { RandomCharacter } from "@/components/UI/RandomCharacter";
 import { motion } from "framer-motion";
 import { formatBytes } from "@/lib/utils";
+import Link from "next/link";
 import type { CSSProperties } from "react";
 
 function Pushpin() {
@@ -37,6 +38,29 @@ function FolderTab() {
   );
 }
 
+/* Pipe bubble animation for the detective character */
+function PipeBubbles() {
+  return (
+    <div style={{ position: "absolute", top: "15%", right: "8%", zIndex: 4, pointerEvents: "none" }}>
+      {[0, 1, 2].map((i) => (
+        <motion.div
+          key={i}
+          animate={{ y: [0, -30 - i * 12, -60 - i * 10], opacity: [0.7, 0.5, 0], scale: [0.6 + i * 0.15, 1 + i * 0.1, 0.3] }}
+          transition={{ duration: 3 + i * 0.8, repeat: Infinity, delay: i * 1.2, ease: "easeOut" }}
+          style={{
+            width: 10 + i * 4, height: 10 + i * 4,
+            borderRadius: "50%",
+            border: "2px solid var(--ink-soft)",
+            background: "rgba(255,255,255,0.08)",
+            position: "absolute",
+            right: i * 14, top: i * -6,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { metrics, loading } = useAnalytics();
   const { animations } = useTheme();
@@ -49,11 +73,21 @@ export default function DashboardPage() {
 
   return (
     /* page is transparent — dark wood desk shows through */
-    <div className="page-surface">
+    <div className="page-surface" style={{ position: "relative" }}>
       <ClueTicker/>
-      <div className="container" style={{ paddingTop: 0 }}>
 
-        {/* Hero dossier — slight tilt */}
+      {/* Decorative magnifying glass — left side, hidden on small screens */}
+      <div style={{
+        position: "absolute", top: 320, left: -30, zIndex: 0,
+        opacity: 0.06, transform: "rotate(-18deg)",
+        pointerEvents: "none", display: "var(--show-decorative, block)",
+      }}>
+        <span className="material-symbols-outlined" style={{ fontSize: 260, color: "var(--ink)" }}>search</span>
+      </div>
+
+      <div className="container" style={{ paddingTop: 0, position: "relative", zIndex: 1 }}>
+
+        {/* Hero dossier — with character on right */}
         <div
           className="animate-on-load ink-bleed"
           style={{
@@ -66,6 +100,8 @@ export default function DashboardPage() {
             marginTop: 32,
             marginBottom: 36,
             position: "relative",
+            overflow: "visible",
+            minHeight: 320,
           } as CSSProperties}
         >
           <PageHead
@@ -75,6 +111,22 @@ export default function DashboardPage() {
             lede="Real-time analytics for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers, and let Walytics Holmes piece the case together."
           />
           <Connection/>
+
+          {/* Hero character — positioned on right, partially overlapping edge */}
+          <motion.div
+            animate={animations ? { y: [0, -10, 0], rotate: [-1, 1, -1] } : {}}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              bottom: -20, right: -30,
+              zIndex: 5,
+              pointerEvents: "none",
+            }}
+          >
+            <RandomCharacter width={240} height={280} alt="Walytics Holmes" style={{ objectFit: "contain", filter: "drop-shadow(4px 6px 8px rgba(0,0,0,0.5))" }}/>
+          </motion.div>
+          {/* Pipe bubbles near the character */}
+          {animations && <PipeBubbles/>}
         </div>
 
         {/* KPI row — each card with a distinct tilt */}
@@ -97,7 +149,10 @@ export default function DashboardPage() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                 <div>
-                  <div className="kicker">Case Files Filed</div>
+                  <div className="kicker" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>folder_open</span>
+                    Case Files Filed
+                  </div>
                   <div className="mono" style={{ fontSize: 10, opacity: 0.6 }}>aka Total Blobs</div>
                 </div>
                 <span className="stamp">ACTIVE</span>
@@ -131,7 +186,10 @@ export default function DashboardPage() {
             }}>
               <div className="kicker" style={{ fontSize: 9 }}>VAULT 03</div>
             </div>
-            <div className="kicker" style={{ marginBottom: 4 }}>Evidence Locker</div>
+            <div className="kicker" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>lock</span>
+              Evidence Locker
+            </div>
             <div className="h-display" style={{ fontSize: 38, lineHeight: 1, marginBottom: 6 }}>
               {loading ? "—" : formatBytes(totalSize).split(" ")[0]}
               <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.55 }}>
@@ -158,7 +216,10 @@ export default function DashboardPage() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                 <div>
-                  <div className="kicker">Persons of Interest</div>
+                  <div className="kicker" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>groups</span>
+                    Persons of Interest
+                  </div>
                   <div className="mono" style={{ fontSize: 10, opacity: 0.6 }}>aka Publishers</div>
                 </div>
                 <span className="stamp">OBSERVED</span>
@@ -191,7 +252,10 @@ export default function DashboardPage() {
                 minHeight: 200,
               } as CSSProperties}
             >
-              <div className="kicker" style={{ marginBottom: 4 }}>Avg. Dossier Size</div>
+              <div className="kicker" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
+                <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>straighten</span>
+                Avg. Dossier Size
+              </div>
               <div className="mono" style={{ fontSize: 10, opacity: 0.6, marginBottom: 14 }}>aka Avg Blob Size</div>
               <div className="h-display" style={{ fontSize: 38, lineHeight: 1, marginBottom: 10 }}>
                 {loading ? "—" : formatBytes(avgSize).split(" ")[0]}
@@ -221,7 +285,10 @@ export default function DashboardPage() {
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
               <div>
-                <div className="kicker">Blobs per day · Last 30 Days</div>
+                <div className="kicker" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: 16, opacity: 0.7 }}>timeline</span>
+                  Blobs per day · Last 30 Days
+                </div>
                 <h2 className="h-display" style={{ fontSize: 28, margin: "4px 0 0" }}>Cases Over Time</h2>
               </div>
               <div style={{ display: "flex", gap: 6 }}>
@@ -253,6 +320,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* The Consulting Walrus */}
           <div
             className="paper-hover animate-on-load ink-bleed"
             style={{
@@ -266,25 +334,26 @@ export default function DashboardPage() {
             } as CSSProperties}
           >
             <div>
-              <div className="kicker">Detective on Duty</div>
+              <div className="kicker">Status Report</div>
               <h2 className="h-display" style={{ fontSize: 22, margin: "4px 0 0" }}>Walytics Holmes</h2>
             </div>
             <div style={{
-              background: "var(--ink)", border: "2px solid var(--ink)",
-              padding: "16px 12px 8px",
+              background: "#fff", border: "3px solid var(--ink)",
+              padding: "20px 16px 12px",
               display: "flex", flexDirection: "column", alignItems: "center", gap: 0,
-              position: "relative", overflow: "hidden", minHeight: 220,
+              position: "relative", overflow: "hidden", minHeight: 280,
+              borderRadius: 2,
             }}>
               {/* Logo */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Walytics Holmes" style={{ width: "100%", maxWidth: 260, objectFit: "contain", zIndex: 1 }}/>
-              {/* Character — floating animation */}
+              {/* Character — floating animation, larger */}
               <motion.div
                 animate={{ y: [0, -8, 0], rotate: [-0.5, 0.5, -0.5] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                style={{ marginTop: -20, zIndex: 2 }}
+                style={{ marginTop: -16, zIndex: 2 }}
               >
-                <RandomCharacter width={160} height={180} alt="Walytics Holmes" style={{ objectFit: "contain" }}/>
+                <RandomCharacter width={200} height={230} alt="Walytics Holmes" style={{ objectFit: "contain" }}/>
               </motion.div>
             </div>
             <div style={{
@@ -385,17 +454,91 @@ export default function DashboardPage() {
           style={{
             "--initial-rotation": "0deg",
             animationDelay: "1s",
+            padding: "28px 24px 22px",
+          } as CSSProperties}
+        >
+          <div className="kicker" style={{ marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+            <motion.span
+              className="material-symbols-outlined"
+              animate={animations ? { rotate: [0, 15, -15, 0] } : {}}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              style={{ fontSize: 16, color: "var(--gold)" }}
+            >bolt</motion.span>
+            The Detective&apos;s Toolkit
+          </div>
+          <h2 className="h-display" style={{ fontSize: "clamp(32px, 4vw, 48px)", margin: "0 0 20px", color: "var(--cream, #f5f0e8)" }}>Quick Actions</h2>
+          <div style={{
             background: "var(--paper-2)",
             border: "3px solid var(--ink)",
             boxShadow: "4px 4px 0 0 rgba(0,0,0,0.6)",
             padding: "22px 24px",
-          } as CSSProperties}
-        >
-          <div className="kicker" style={{ marginBottom: 14 }}>The Detective&apos;s Toolkit</div>
-          <QuickActions/>
+          }}>
+            <QuickActions/>
+          </div>
         </div>
 
         <Footer/>
+      </div>
+
+      {/* Floating detective toolkit dock */}
+      <div style={{
+        position: "fixed",
+        bottom: 32,
+        left: "50%",
+        transform: "translateX(-50%)",
+        zIndex: 50,
+        display: "flex",
+        gap: 4,
+        background: "var(--surface, #1a1410)",
+        border: "4px solid var(--ink, #000)",
+        boxShadow: "6px 6px 0 0 rgba(0,0,0,0.7)",
+        padding: "8px 16px",
+        borderRadius: 2,
+      }}>
+        <Link href="/explorer" style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 44, height: 44, borderRadius: 2,
+          background: "transparent", border: "none", cursor: "pointer",
+          color: "var(--cream, #f5f0e8)", textDecoration: "none",
+          transition: "background 0.15s",
+        }}
+          title="Search Explorer"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>search</span>
+        </Link>
+        <button onClick={toggleFlashlight} style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 44, height: 44, borderRadius: 2,
+          background: "transparent", border: "none", cursor: "pointer",
+          color: "var(--cream, #f5f0e8)",
+          transition: "background 0.15s",
+        }}
+          title="Toggle Flashlight"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>flashlight_on</span>
+        </button>
+        <Link href="/chat" style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 44, height: 44, borderRadius: 2,
+          background: "transparent", border: "none", cursor: "pointer",
+          color: "var(--cream, #f5f0e8)", textDecoration: "none",
+          transition: "background 0.15s",
+        }}
+          title="AI Chat"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>edit</span>
+        </Link>
+        <Link href="/docs" style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          width: 44, height: 44, borderRadius: 2,
+          background: "transparent", border: "none", cursor: "pointer",
+          color: "var(--cream, #f5f0e8)", textDecoration: "none",
+          transition: "background 0.15s",
+        }}
+          title="Documentation"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>menu_book</span>
+        </Link>
       </div>
 
       {animations && (
