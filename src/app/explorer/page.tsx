@@ -26,11 +26,7 @@ function getVerdict(id: string) {
   return VERDICTS[h % VERDICTS.length];
 }
 
-const BLOB_IMAGES = [
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCDrB3Jd3hB50FV10zgL9B2wvI42IcD0PxGQkZzv8hqRtP3-rkpwPwWd9qtoSVoob_F4GeqKdWHH6gaXqxW_TsaHeBjze8PSC35YCO-lq9CBDiB0LGagGkcws80ZhBpg9LDz3ySgxcezKJ81JOQacO6usdsJIMkdMedsaX8C5UtHU0pSXvESvGmYuF5RlXGwDbuT78c-EvRD1OL4IzHxLP0w9Rje2HLyr7md-Ioq0ot3NgBK_5BN5b2-DhldcdFdf4RgbqggioA4aE",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuA-rBXWSxxgVn2s9YfsYWYSh3sR_5IU6sokHA7efQxuq3yvv3LWKw_zyHS4YnhnhSW1OMUvLLKneGywY6dNXO3lvwIEgzKhGxHobE5l_N5eBpsxt7uJwjhDsuj_-KkGvt4puTYLLfdLmD3MRxo8TpGD1lIkh8ahIRdL5qYI6S13jh3fGGvBncqrDxT8GnfKA_HjNmA5ukcjGwr_IcEhwqW6ib6JDVJ5w9ryX_EPoBe78ANAT7MeBSUvELxIt-7w7TW1bmTv55S_exI",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuABv9w30XilXzgbQ3TP1_O_AEBfrPBM5uF3MHn09ohTGzQ76jXYDOP0-SeUNq2vPMOoh_qfvARQYXVb_QBLLkmbz2YpcFfwjEF_sLc8wHy0uZWjLwdpvS8YGd5V6B-RScdhQdVNZRWzUFhFbmrIbC92C3IrEvYNEo4si_B79DGq0FO_kpPXk-WhfqY1wYmsZAJARtu8n3OHp7PUoqR-MPXD7AMm3PJwIfnOHKIoWGpKJra-QIDraNZ38ufakE_ha8wCMbKYPV_K1d8",
-];
+const BLOB_IMAGES = Array.from({ length: 20 }, (_, i) => `/clues/clue-${String(i + 1).padStart(2, "0")}.png`);
 
 const STAMP_LABELS = ["CONFIDENTIAL", "VERIFIED", "CLASSIFIED", "TOP SECRET", "EVIDENCE"];
 const STAMP_ROTATIONS = [-6, 4, -3, 7, -5];
