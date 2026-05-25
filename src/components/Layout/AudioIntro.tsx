@@ -2,8 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-const DURATION_MS = 10000;
-
 export function AudioIntro() {
   const playedRef = useRef(false);
 
@@ -12,15 +10,22 @@ export function AudioIntro() {
     playedRef.current = true;
 
     const audio = new Audio("/panther.mp3");
-    audio.volume = 0.45;
+    audio.volume = 0.35;
 
-    const timer = setTimeout(() => { audio.pause(); }, DURATION_MS);
-
-    audio.play().catch(() => { clearTimeout(timer); });
+    // Try autoplay — if blocked by browser policy, play on first user interaction
+    audio.play().catch(() => {
+      const playOnInteraction = () => {
+        audio.play().catch(() => {});
+        document.removeEventListener("click", playOnInteraction);
+        document.removeEventListener("keydown", playOnInteraction);
+      };
+      document.addEventListener("click", playOnInteraction, { once: true });
+      document.addEventListener("keydown", playOnInteraction, { once: true });
+    });
 
     return () => {
-      clearTimeout(timer);
       audio.pause();
+      audio.src = "";
     };
   }, []);
 

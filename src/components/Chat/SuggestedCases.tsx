@@ -37,7 +37,7 @@ export function SuggestedCases({ onSend, disabled }: SuggestedCasesProps) {
         {SUGGESTED.map((s, i) => (
           <button key={i} onClick={() => onSend(s.q)} disabled={disabled}
             className="btn" style={{
-              padding: "8px 12px", fontSize: 11,
+              padding: "8px 12px", fontSize: 15,
               boxShadow: "3px 3px 0 0 var(--ink)",
               background: CASE_BG[i % CASE_BG.length],
               color: "var(--ink)",

@@ -41,8 +41,8 @@ export function TopPublishers({ publishers }: TopPublishersProps) {
           <div>
             <div style={{ fontFamily: "var(--font-display)", fontSize: 17, lineHeight: 1.1 }}>{r.label}</div>
             <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 3 }}>
-              <span className="mono" style={{ fontSize: 10, opacity: 0.55 }}>{r.addr}</span>
-              <span className="tag" style={{ fontSize: 9, padding: "2px 6px",
+              <span className="mono" style={{ fontSize: 14, opacity: 0.55 }}>{r.addr}</span>
+              <span className="tag" style={{ fontSize: 13, padding: "2px 6px",
                 background: r.badge === "PRIME SUSPECT" ? "var(--gold)" :
                             r.badge === "RISING" ? "var(--mint)" :
                             r.badge === "UNDER WATCH" ? "var(--burgundy)" : "var(--paper-2)",
@@ -51,11 +51,11 @@ export function TopPublishers({ publishers }: TopPublishersProps) {
           </div>
           <div style={{ textAlign: "right" }}>
             <div className="mono" style={{ fontSize: 15, fontWeight: 800 }}>{r.blobs}</div>
-            <div className="mono" style={{ fontSize: 10, opacity: 0.7 }}>{r.size}</div>
+            <div className="mono" style={{ fontSize: 14, opacity: 0.7 }}>{r.size}</div>
           </div>
           <div style={{ textAlign: "right" }}>
             <span className="mono" style={{
-              fontSize: 11, fontWeight: 800,
+              fontSize: 15, fontWeight: 800,
               padding: "3px 6px",
               background: r.trend >= 0 ? "var(--mint)" : "var(--burgundy)",
               color: r.trend >= 0 ? "var(--ink)" : "var(--tusk)",

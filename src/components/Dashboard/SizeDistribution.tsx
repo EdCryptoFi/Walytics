@@ -20,7 +20,7 @@ export function SizeDistribution({ data }: SizeDistributionProps) {
         const hatched = i === data.length - 1;
         return (
           <div key={i} style={{ display: "grid", gridTemplateColumns: "110px 1fr 90px", alignItems: "center", gap: 12 }}>
-            <span className="mono" style={{ fontSize: 12, fontWeight: 700 }}>{b.range}</span>
+            <span className="mono" style={{ fontSize: 16, fontWeight: 700 }}>{b.range}</span>
             <div style={{ height: 24, border: "2.5px solid var(--ink)", background: "var(--paper-2)", position: "relative", overflow: "hidden" }}>
               <div style={{
                 width: `${pct}%`, height: "100%", background: COLORS[i] ?? "var(--ink)",
@@ -31,11 +31,11 @@ export function SizeDistribution({ data }: SizeDistributionProps) {
               }}/>
               <span style={{
                 position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)",
-                fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700,
+                fontFamily: "var(--font-mono)", fontSize: 14, fontWeight: 700,
                 color: "var(--ink)", mixBlendMode: "multiply"
               }}>{pct.toFixed(1)}%</span>
             </div>
-            <span className="mono" style={{ fontSize: 12, fontWeight: 700, textAlign: "right" }}>
+            <span className="mono" style={{ fontSize: 16, fontWeight: 700, textAlign: "right" }}>
               {b.count.toLocaleString()}
             </span>
           </div>

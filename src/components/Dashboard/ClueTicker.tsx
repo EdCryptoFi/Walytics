@@ -29,7 +29,7 @@ export function ClueTicker() {
     }}>
       <span style={{
         background: "var(--gold)", color: "var(--ink)",
-        padding: "3px 8px", letterSpacing: "0.18em", fontSize: 10, whiteSpace: "nowrap", flexShrink: 0
+        padding: "3px 8px", letterSpacing: "0.18em", fontSize: 14, whiteSpace: "nowrap", flexShrink: 0
       }}>LIVE CLUE</span>
       <span key={i} style={{ flex: 1 }}>{clues[i]}</span>
       <span style={{ opacity: 0.6 }}>{String(i + 1).padStart(2, "0")}/{String(clues.length).padStart(2, "0")}</span>

@@ -104,21 +104,28 @@ export default function DashboardPage() {
             minHeight: 320,
           } as CSSProperties}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/index.png" alt="Walytics Holmes Characters" style={{
-            width: "100%",
-            maxWidth: 700,
-            objectFit: "contain",
-            marginBottom: 16,
-            filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.3))",
-          }}/>
-          <PageHead
-            kicker="Walytics Holmes is on the case"
-            caseNo="W-0042-MAY"
-            title={<>The Game<br/>is a Blob.</>}
-            lede="Real-time analytics for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers, and let Walytics Holmes piece the case together."
-          />
-          <Connection/>
+          <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
+            {/* Left: text content */}
+            <div style={{ flex: "1 1 340px", minWidth: 0 }}>
+              <PageHead
+                kicker="Walytics Holmes is on the case"
+                caseNo="W-0042-MAY"
+                title={<>The Game<br/>is a Blob.</>}
+                lede="Real-time analytics for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers, and let Walytics Holmes piece the case together."
+              />
+              <Connection/>
+            </div>
+            {/* Right: Walytics Holmes character art */}
+            <div style={{ flex: "0 1 380px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/index.png" alt="Walytics Holmes Characters" style={{
+                width: "100%",
+                maxWidth: 380,
+                objectFit: "contain",
+                filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.3))",
+              }}/>
+            </div>
+          </div>
 
           {/* Pipe bubbles decoration */}
           {animations && <PipeBubbles/>}
@@ -148,7 +155,7 @@ export default function DashboardPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>folder_open</span>
                     Case Files Filed
                   </div>
-                  <div className="mono" style={{ fontSize: 10, opacity: 0.6 }}>aka Total Blobs</div>
+                  <div className="mono" style={{ fontSize: 14, opacity: 0.6 }}>aka Total Blobs</div>
                 </div>
                 <span className="stamp">ACTIVE</span>
               </div>
@@ -156,7 +163,7 @@ export default function DashboardPage() {
                 {loading ? "—" : totalBlobs.toLocaleString()}
                 <span style={{ fontSize: 18, fontWeight: 400, opacity: 0.55 }}> blobs</span>
               </div>
-              <div className="mono" style={{ fontSize: 11, color: "#2e6b63" }}>▲ 4.8% vs last week</div>
+              <div className="mono" style={{ fontSize: 15, color: "#2e6b63" }}>▲ 4.8% vs last week</div>
             </div>
           </div>
 
@@ -179,7 +186,7 @@ export default function DashboardPage() {
               display: "flex", alignItems: "center", justifyContent: "center",
               maxHeight: 80, overflow: "hidden",
             }}>
-              <div className="kicker" style={{ fontSize: 9 }}>VAULT 03</div>
+              <div className="kicker" style={{ fontSize: 13 }}>VAULT 03</div>
             </div>
             <div className="kicker" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 6 }}>
               <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>lock</span>
@@ -191,7 +198,7 @@ export default function DashboardPage() {
                 {" "}{loading ? "" : formatBytes(totalSize).split(" ")[1]}
               </span>
             </div>
-            <div className="mono" style={{ fontSize: 11, color: "#2e6b63" }}>▲ 6.1% vs last week</div>
+            <div className="mono" style={{ fontSize: 15, color: "#2e6b63" }}>▲ 6.1% vs last week</div>
           </div>
 
           {/* 3 — Pinned note (peach) */}
@@ -215,7 +222,7 @@ export default function DashboardPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>groups</span>
                     Persons of Interest
                   </div>
-                  <div className="mono" style={{ fontSize: 10, opacity: 0.6 }}>aka Publishers</div>
+                  <div className="mono" style={{ fontSize: 14, opacity: 0.6 }}>aka Publishers</div>
                 </div>
                 <span className="stamp">OBSERVED</span>
               </div>
@@ -223,7 +230,7 @@ export default function DashboardPage() {
                 {loading ? "—" : publishers.toString()}
                 <span style={{ fontSize: 18, fontWeight: 400, opacity: 0.55 }}> addrs</span>
               </div>
-              <div className="mono" style={{ fontSize: 11, color: "#2e6b63" }}>▲ 2.4% vs last week</div>
+              <div className="mono" style={{ fontSize: 15, color: "#2e6b63" }}>▲ 2.4% vs last week</div>
             </div>
           </div>
 
@@ -251,14 +258,14 @@ export default function DashboardPage() {
                 <span className="material-symbols-outlined" style={{ fontSize: 18, opacity: 0.7 }}>straighten</span>
                 Avg. Dossier Size
               </div>
-              <div className="mono" style={{ fontSize: 10, opacity: 0.6, marginBottom: 14 }}>aka Avg Blob Size</div>
+              <div className="mono" style={{ fontSize: 14, opacity: 0.6, marginBottom: 14 }}>aka Avg Blob Size</div>
               <div className="h-display" style={{ fontSize: 38, lineHeight: 1, marginBottom: 10 }}>
                 {loading ? "—" : formatBytes(avgSize).split(" ")[0]}
                 <span style={{ fontSize: 15, fontWeight: 400, opacity: 0.55 }}>
                   {" "}{loading ? "" : formatBytes(avgSize).split(" ")[1]}
                 </span>
               </div>
-              <div className="mono" style={{ fontSize: 11, color: "var(--error)" }}>▼ 2.1% shrinking</div>
+              <div className="mono" style={{ fontSize: 15, color: "var(--error)" }}>▼ 2.1% shrinking</div>
             </div>
           </div>
 
@@ -307,7 +314,7 @@ export default function DashboardPage() {
                 <div className="h-display" style={{ fontSize: 22, marginTop: 2 }}>Steady Accumulation</div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div className="mono" style={{ fontSize: 10, opacity: 0.6 }}>30D NET</div>
+                <div className="mono" style={{ fontSize: 14, opacity: 0.6 }}>30D NET</div>
                 <div className="h-display" style={{ fontSize: 24, color: "#2e6b63" }}>
                   +{(metrics?.blobsOverTime?.slice(-1)[0]?.count ?? 0) - (metrics?.blobsOverTime?.[0]?.count ?? 0)} blobs
                 </div>
@@ -361,7 +368,7 @@ export default function DashboardPage() {
                 borderLeft: "2px solid var(--ink)", borderTop: "2px solid var(--ink)",
                 transform: "rotate(45deg)",
               }}/>
-              <div className="kicker" style={{ fontSize: 9, marginBottom: 6 }}>Today&apos;s deduction</div>
+              <div className="kicker" style={{ fontSize: 13, marginBottom: 6 }}>Today&apos;s deduction</div>
               <p className="mono" style={{ fontSize: 12.5, lineHeight: 1.55, margin: 0, fontStyle: "italic" }}>
                 &ldquo;The blob size is shrinking <em>and</em> count is rising — your publishers are chunking, Watson. Index more aggressively.&rdquo;
               </p>
@@ -475,66 +482,6 @@ export default function DashboardPage() {
         <Footer/>
       </div>
 
-      {/* Floating detective toolkit dock */}
-      <div style={{
-        position: "fixed",
-        bottom: 32,
-        left: "50%",
-        transform: "translateX(-50%)",
-        zIndex: 50,
-        display: "flex",
-        gap: 4,
-        background: "var(--surface, #1a1410)",
-        border: "4px solid var(--ink, #000)",
-        boxShadow: "6px 6px 0 0 rgba(0,0,0,0.7)",
-        padding: "8px 16px",
-        borderRadius: 2,
-      }}>
-        <Link href="/explorer" style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: 44, height: 44, borderRadius: 2,
-          background: "transparent", border: "none", cursor: "pointer",
-          color: "var(--cream, #f5f0e8)", textDecoration: "none",
-          transition: "background 0.15s",
-        }}
-          title="Search Explorer"
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>search</span>
-        </Link>
-        <button onClick={toggleFlashlight} style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: 44, height: 44, borderRadius: 2,
-          background: "transparent", border: "none", cursor: "pointer",
-          color: "var(--cream, #f5f0e8)",
-          transition: "background 0.15s",
-        }}
-          title="Toggle Flashlight"
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>flashlight_on</span>
-        </button>
-        <Link href="/chat" style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: 44, height: 44, borderRadius: 2,
-          background: "transparent", border: "none", cursor: "pointer",
-          color: "var(--cream, #f5f0e8)", textDecoration: "none",
-          transition: "background 0.15s",
-        }}
-          title="AI Chat"
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>edit</span>
-        </Link>
-        <Link href="/docs" style={{
-          display: "flex", alignItems: "center", justifyContent: "center",
-          width: 44, height: 44, borderRadius: 2,
-          background: "transparent", border: "none", cursor: "pointer",
-          color: "var(--cream, #f5f0e8)", textDecoration: "none",
-          transition: "background 0.15s",
-        }}
-          title="Documentation"
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: 22 }}>menu_book</span>
-        </Link>
-      </div>
 
       {animations && (
         <div style={{

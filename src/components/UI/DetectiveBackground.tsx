@@ -11,14 +11,14 @@ export function DetectiveBackground() {
         background: "#e8e0d4",
       }}/>
 
-      {/* Noir desk photo at 20% opacity over the beige */}
+      {/* Noir desk photo at 50% opacity over the beige */}
       <div style={{
         position: "fixed", inset: 0, zIndex: -3,
         backgroundImage: `url('${BG_URL}')`,
         backgroundSize: "cover",
         backgroundPosition: "center top",
         backgroundRepeat: "no-repeat",
-        opacity: 0.20,
+        opacity: 0.50,
         filter: "sepia(0.15) saturate(0.7)",
       }}/>
 

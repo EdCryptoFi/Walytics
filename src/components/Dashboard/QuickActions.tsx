@@ -18,7 +18,7 @@ export function QuickActions() {
             <a.Icon size={18}/>
             <span style={{ fontSize: 14 }}>{a.label}</span>
           </span>
-          <span style={{ fontFamily: "var(--font-body)", fontSize: 11, fontWeight: 500, opacity: 0.85, textTransform: "none", letterSpacing: "0" }}>
+          <span style={{ fontFamily: "var(--font-body)", fontSize: 15, fontWeight: 500, opacity: 0.85, textTransform: "none", letterSpacing: "0" }}>
             {a.sub}
           </span>
         </Link>
