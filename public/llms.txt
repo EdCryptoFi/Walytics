@@ -1,0 +1,37 @@
+# Walytics
+> Real-time analytics dashboard for Walrus decentralized storage on Sui blockchain
+
+## About
+Walytics Holmes is an analytics dashboard built for the Walrus decentralized storage protocol on the Sui blockchain. It gives developers, researchers, and builders a real-time window into blob storage activity — tracking uploads, publishers, storage epochs, and network health across the Walrus ecosystem.
+
+The project was built for the Walrus hackathon and features a detective noir aesthetic themed around the character "Walytics Holmes," who guides users through on-chain analytics with personality. The name plays on "The game is afoot" from Sherlock Holmes — here, the game is a blob.
+
+Key features include:
+- Live KPI dashboard showing total blobs, storage volume, active publishers, and epoch data
+- Blob timeline charts visualizing storage activity over time
+- Publisher leaderboards ranking the most active storage nodes
+- Blob Explorer for drilling into individual blob metadata and details
+- AI-powered analytics chat with Walytics Holmes using Gemini AI
+- Getting started tutorial for new Walrus users
+- Technical documentation and API reference
+
+## Pages
+- / — Dashboard with KPIs, blob timeline, publisher rankings, and real-time Walrus network stats
+- /explorer — Browse and analyze individual blobs stored on the Walrus network
+- /chat — AI-powered analytics chat with Walytics Holmes character, powered by Gemini AI
+- /tutorial — Getting started guide for using Walytics and the Walrus protocol
+- /docs — Technical documentation and API reference for the Walytics platform
+
+## Tech
+- Next.js (App Router), React, TypeScript
+- Tatum Sui RPC for Sui blockchain data
+- Walrus Protocol for decentralized blob storage data
+- Gemini AI for the conversational analytics assistant
+- Custom CSS (detective noir brutalist theme, no Tailwind)
+
+## Context
+Walytics was built as a hackathon project to provide visibility into the Walrus decentralized storage network. Walrus is a protocol on Sui that enables cost-efficient, resilient blob storage for Web3 applications. Walytics surfaces on-chain analytics in a way that is accessible and visually engaging.
+
+## Links
+- Production: https://walytics.vercel.app
+- Sitemap: https://walytics.vercel.app/sitemap.xml

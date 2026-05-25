@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+const MAX_PLAY_MS = 10_000;
+
 export function AudioIntro() {
   const playedRef = useRef(false);
 
@@ -12,7 +14,13 @@ export function AudioIntro() {
     const audio = new Audio("/panther.mp3");
     audio.volume = 0.35;
 
-    // Try autoplay — if blocked by browser policy, play on first user interaction
+    // Stop after 10 seconds
+    const timer = setTimeout(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }, MAX_PLAY_MS);
+
+    // Try autoplay — if blocked, play on first user interaction
     audio.play().catch(() => {
       const playOnInteraction = () => {
         audio.play().catch(() => {});
@@ -24,6 +32,7 @@ export function AudioIntro() {
     });
 
     return () => {
+      clearTimeout(timer);
       audio.pause();
       audio.src = "";
     };

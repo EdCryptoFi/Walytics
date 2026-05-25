@@ -911,27 +911,28 @@ button.btn:active, a.btn:active {
 }
 .footer-links a {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: #fff;
   text-decoration: none;
   padding: 4px 0;
   border-bottom: 1px dashed var(--outline);
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 .footer-links a:hover {
-  color: var(--ink);
-  border-color: var(--ink);
+  color: #fff;
+  border-color: #fff;
+  text-shadow: 0 0 8px rgba(255,255,255,0.3);
 }
 .footer-copyright {
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--error);
+  color: rgba(255,255,255,0.85);
   transform: rotate(-2deg);
   display: inline-block;
   padding: 4px 10px;

@@ -1,62 +1,50 @@
 import type { BlobInfo, WalrusMetrics } from "@/types"
+import { tatumRpcCall } from "@/lib/tatum"
 
 const WALRUS_PACKAGE = process.env.WALRUS_PACKAGE_ID || ""
-const SUI_GRAPHQL = "https://sui-mainnet.mystenlabs.com/graphql"
 
-// ── Real data fetching via Sui GraphQL ──────────────────────────
+// ── Real data fetching via Tatum Sui RPC (suix_queryEvents) ──────
+
+interface SuiEvent {
+  id: { txDigest: string; eventSeq: string }
+  packageId: string
+  parsedJson: Record<string, unknown>
+  sender: string
+  timestampMs: string
+  type: string
+}
 
 async function fetchRealBlobs(limit: number): Promise<BlobInfo[] | null> {
   if (!WALRUS_PACKAGE) return null
 
-  const query = `{
-    events(
-      filter: { eventType: "${WALRUS_PACKAGE}::blob::BlobRegistered" }
-      first: ${limit}
-    ) {
-      nodes {
-        json
-        sender
-        timestamp
-      }
-    }
-  }`
-
   try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 8000)
+    const result = await tatumRpcCall<{
+      data: SuiEvent[]
+      hasNextPage: boolean
+      nextCursor: { txDigest: string; eventSeq: string } | null
+    }>("suix_queryEvents", [
+      { MoveEventType: `${WALRUS_PACKAGE}::blob::BlobRegistered` },
+      null,
+      limit,
+      true, // descending order
+    ])
 
-    const res = await fetch(SUI_GRAPHQL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
-      signal: controller.signal,
-    })
-    clearTimeout(timeout)
+    if (!result?.data || result.data.length === 0) return null
 
-    if (!res.ok) return null
-
-    const data = await res.json() as {
-      data?: { events?: { nodes?: { json: string; sender: string; timestamp: string }[] } }
-    }
-
-    const nodes = data?.data?.events?.nodes
-    if (!Array.isArray(nodes) || nodes.length === 0) return null
-
-    return nodes.map((n) => {
-      let parsed: Record<string, unknown> = {}
-      try { parsed = JSON.parse(n.json || "{}") } catch { /* ignore */ }
-
+    return result.data.map((ev) => {
+      const p = ev.parsedJson || {}
       return {
-        id: String(parsed.blob_id || parsed.id || `0x${Date.now().toString(16)}`),
-        publisher: n.sender || "unknown",
-        size: Number(parsed.size || parsed.unencoded_length || 0),
-        storageType: String(parsed.encoding_type || "RedStuff"),
-        timestamp: Math.floor(new Date(n.timestamp).getTime() / 1000),
-        digest: String(parsed.root_hash || ""),
+        id: String(p.blob_id || p.id || ev.id.txDigest),
+        publisher: ev.sender || "unknown",
+        size: Number(p.size || p.unencoded_length || 0),
+        storageType: String(p.encoding_type || "RedStuff"),
+        timestamp: Math.floor(Number(ev.timestampMs) / 1000),
+        digest: String(p.root_hash || ""),
         erasureCodeType: "redStuff",
       }
     })
-  } catch {
+  } catch (err) {
+    console.warn("[Walrus] Failed to fetch blobs via Tatum RPC:", String(err))
     return null
   }
 }
@@ -64,58 +52,36 @@ async function fetchRealBlobs(limit: number): Promise<BlobInfo[] | null> {
 async function fetchRealMetrics(): Promise<Partial<WalrusMetrics> | null> {
   if (!WALRUS_PACKAGE) return null
 
-  // Query aggregated counts via Sui GraphQL
-  const query = `{
-    events(
-      filter: { eventType: "${WALRUS_PACKAGE}::blob::BlobRegistered" }
-      first: 200
-    ) {
-      nodes {
-        json
-        sender
-        timestamp
-      }
-      pageInfo { hasNextPage }
-    }
-  }`
-
   try {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), 10000)
+    const result = await tatumRpcCall<{
+      data: SuiEvent[]
+      hasNextPage: boolean
+      nextCursor: { txDigest: string; eventSeq: string } | null
+    }>("suix_queryEvents", [
+      { MoveEventType: `${WALRUS_PACKAGE}::blob::BlobRegistered` },
+      null,
+      200,
+      true,
+    ])
 
-    const res = await fetch(SUI_GRAPHQL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
-      signal: controller.signal,
-    })
-    clearTimeout(timeout)
+    if (!result?.data || result.data.length === 0) return null
 
-    if (!res.ok) return null
-
-    const data = await res.json() as {
-      data?: { events?: { nodes?: { json: string; sender: string; timestamp: string }[] } }
-    }
-
-    const nodes = data?.data?.events?.nodes
-    if (!Array.isArray(nodes) || nodes.length === 0) return null
-
-    const blobs: BlobInfo[] = nodes.map((n) => {
-      let parsed: Record<string, unknown> = {}
-      try { parsed = JSON.parse(n.json || "{}") } catch { /* ignore */ }
+    const blobs: BlobInfo[] = result.data.map((ev) => {
+      const p = ev.parsedJson || {}
       return {
-        id: String(parsed.blob_id || `0x${Date.now()}`),
-        publisher: n.sender || "unknown",
-        size: Number(parsed.size || parsed.unencoded_length || 0),
-        storageType: String(parsed.encoding_type || "RedStuff"),
-        timestamp: Math.floor(new Date(n.timestamp).getTime() / 1000),
-        digest: String(parsed.root_hash || ""),
+        id: String(p.blob_id || ev.id.txDigest),
+        publisher: ev.sender || "unknown",
+        size: Number(p.size || p.unencoded_length || 0),
+        storageType: String(p.encoding_type || "RedStuff"),
+        timestamp: Math.floor(Number(ev.timestampMs) / 1000),
+        digest: String(p.root_hash || ""),
         erasureCodeType: "redStuff",
       }
     })
 
     return computeMetrics(blobs)
-  } catch {
+  } catch (err) {
+    console.warn("[Walrus] Failed to fetch metrics via Tatum RPC:", String(err))
     return null
   }
 }

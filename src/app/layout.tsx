@@ -35,6 +35,35 @@ export const metadata: Metadata = {
   title: "Walytics — The Game is a Blob",
   description:
     "Real-time analytics dashboard for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers.",
+  metadataBase: new URL("https://walytics.vercel.app"),
+  openGraph: {
+    title: "Walytics — The Game is a Blob",
+    description:
+      "Real-time analytics dashboard for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers.",
+    url: "https://walytics.vercel.app",
+    siteName: "Walytics",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Walytics — The Game is a Blob",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Walytics — The Game is a Blob",
+    description:
+      "Real-time analytics dashboard for Walrus decentralized storage on Sui. Catalogue your blobs, interrogate your publishers.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

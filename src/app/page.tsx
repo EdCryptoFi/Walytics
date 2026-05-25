@@ -38,28 +38,6 @@ function FolderTab() {
   );
 }
 
-/* Pipe bubble animation for the detective character */
-function PipeBubbles() {
-  return (
-    <div style={{ position: "absolute", top: "15%", right: "8%", zIndex: 4, pointerEvents: "none" }}>
-      {[0, 1, 2].map((i) => (
-        <motion.div
-          key={i}
-          animate={{ y: [0, -30 - i * 12, -60 - i * 10], opacity: [0.7, 0.5, 0], scale: [0.6 + i * 0.15, 1 + i * 0.1, 0.3] }}
-          transition={{ duration: 3 + i * 0.8, repeat: Infinity, delay: i * 1.2, ease: "easeOut" }}
-          style={{
-            width: 10 + i * 4, height: 10 + i * 4,
-            borderRadius: "50%",
-            border: "2px solid var(--ink-soft)",
-            background: "rgba(255,255,255,0.08)",
-            position: "absolute",
-            right: i * 14, top: i * -6,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function DashboardPage() {
   const { metrics, loading } = useAnalytics();
@@ -106,7 +84,7 @@ export default function DashboardPage() {
         >
           <div style={{ display: "flex", gap: 32, alignItems: "center", flexWrap: "wrap" }}>
             {/* Left: text content */}
-            <div style={{ flex: "1 1 340px", minWidth: 0 }}>
+            <div style={{ flex: "1 1 300px", minWidth: 0 }}>
               <PageHead
                 kicker="Walytics Holmes is on the case"
                 caseNo="W-0042-MAY"
@@ -115,20 +93,17 @@ export default function DashboardPage() {
               />
               <Connection/>
             </div>
-            {/* Right: Walytics Holmes character art */}
-            <div style={{ flex: "0 1 380px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            {/* Right: Walytics Holmes character art — large */}
+            <div style={{ flex: "1 1 420px", display: "flex", justifyContent: "center", alignItems: "center" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/index.png" alt="Walytics Holmes Characters" style={{
                 width: "100%",
-                maxWidth: 380,
+                maxWidth: 540,
                 objectFit: "contain",
-                filter: "drop-shadow(2px 4px 6px rgba(0,0,0,0.3))",
+                filter: "drop-shadow(4px 6px 12px rgba(0,0,0,0.4))",
               }}/>
             </div>
           </div>
-
-          {/* Pipe bubbles decoration */}
-          {animations && <PipeBubbles/>}
         </div>
 
         {/* KPI row — each card with a distinct tilt */}

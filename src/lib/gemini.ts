@@ -2,9 +2,27 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || ""
 
+if (!GEMINI_API_KEY) {
+  console.warn("[Walytics] GEMINI_API_KEY is not set — AI chat will not work.")
+}
+
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
 
 const GEMINI_MODEL = "gemini-2.5-flash"
+
+async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Promise<T> {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      return await fn()
+    } catch (err) {
+      if (i === retries) throw err
+      console.warn(`[Gemini] Attempt ${i + 1} failed, retrying in ${delay}ms...`, String(err))
+      await new Promise(r => setTimeout(r, delay))
+      delay *= 2
+    }
+  }
+  throw new Error("Unreachable")
+}
 
 const WALRUSCAN_INSTRUCTIONS = `
 IMPORTANT — Walruscan link formatting rules:
@@ -37,10 +55,12 @@ ${metricsContext}
 
 Answer questions about this data in character. Be specific with numbers.`
 
-  const result = await model.generateContent([
-    { text: systemPrompt },
-    { text: userMessage },
-  ])
+  const result = await withRetry(() =>
+    model.generateContent([
+      { text: systemPrompt },
+      { text: userMessage },
+    ])
+  )
 
   return result.response.text()
 }
@@ -65,6 +85,6 @@ Format the report as:
 
 Sign off with a pipe-puffing remark. Keep it under 250 words.`
 
-  const result = await model.generateContent(prompt)
+  const result = await withRetry(() => model.generateContent(prompt))
   return result.response.text()
 }

@@ -31,19 +31,19 @@ export function Footer() {
         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
           <RandomCharacter width={48} height={48} alt="Walytics" style={{ border: "1px solid var(--ink)" }}/>
           <div>
-            <div className="h-display" style={{ fontSize: 20, color: "var(--ink)" }}>Walytics</div>
-            <div className="mono" style={{ fontSize: 10, opacity: 0.6, letterSpacing: "0.12em" }}>
+            <div className="h-display" style={{ fontSize: 20, color: "#fff" }}>Walytics</div>
+            <div className="mono" style={{ fontSize: 14, opacity: 0.75, letterSpacing: "0.12em", color: "#fff" }}>
               WALRUS PROTOCOL · SUI · TATUM RPC
             </div>
           </div>
         </div>
         <div className="mono" style={{
-          fontSize: 12, opacity: 0.65, fontStyle: "italic",
+          fontSize: 15, opacity: 0.85, fontStyle: "italic",
           textAlign: "right", maxWidth: 380, lineHeight: 1.5,
-          transform: "rotate(-1deg)",
+          transform: "rotate(-1deg)", color: "#fff",
         }}>
           &ldquo;{pick}&rdquo;<br/>
-          <span style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+          <span style={{ fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase" }}>
             — Walytics Holmes, Consulting Analyst
           </span>
         </div>
