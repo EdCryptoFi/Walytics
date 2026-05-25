@@ -116,14 +116,7 @@ html, body {
   position: relative;
   z-index: 1;
 }
-.page-surface::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(14, 11, 8, 0.45);
-  pointer-events: none;
-  z-index: -1;
-}
+/* beige base provides readability — no dark overlay needed */
 
 /* sidebar layout helpers */
 .with-sidebar {

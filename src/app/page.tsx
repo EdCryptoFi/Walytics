@@ -120,20 +120,7 @@ export default function DashboardPage() {
           />
           <Connection/>
 
-          {/* Hero character — positioned on right, partially overlapping edge */}
-          <motion.div
-            animate={animations ? { y: [0, -10, 0], rotate: [-1, 1, -1] } : {}}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              position: "absolute",
-              bottom: -20, right: -30,
-              zIndex: 5,
-              pointerEvents: "none",
-            }}
-          >
-            <RandomCharacter width={240} height={280} alt="Walytics Holmes" style={{ objectFit: "contain", filter: "drop-shadow(4px 6px 8px rgba(0,0,0,0.5))" }}/>
-          </motion.div>
-          {/* Pipe bubbles near the character */}
+          {/* Pipe bubbles decoration */}
           {animations && <PipeBubbles/>}
         </div>
 

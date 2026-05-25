@@ -5,24 +5,29 @@ const BG_URL = "https://lh3.googleusercontent.com/aida-public/AB6AXuA2SCLznnj6lb
 export function DetectiveBackground() {
   return (
     <>
-      {/* Detective board photo with dark base fallback */}
+      {/* Solid beige base — matches the paper/surface tone */}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: -4,
+        background: "#e8e0d4",
+      }}/>
+
+      {/* Noir desk photo at 20% opacity over the beige */}
       <div style={{
         position: "fixed", inset: 0, zIndex: -3,
-        background: "#0e0b08",
         backgroundImage: `url('${BG_URL}')`,
         backgroundSize: "cover",
         backgroundPosition: "center top",
         backgroundRepeat: "no-repeat",
-        opacity: 0.18,
-        filter: "brightness(0.85) saturate(0.8) sepia(0.2)",
+        opacity: 0.20,
+        filter: "sepia(0.15) saturate(0.7)",
       }}/>
 
-      {/* Vignette + warm top glow combined */}
+      {/* Subtle vignette for depth */}
       <div style={{
         position: "fixed", inset: 0, zIndex: -1,
         background: `
-          radial-gradient(ellipse 60% 40% at 50% 0%, rgba(180,120,50,0.06) 0%, transparent 70%),
-          radial-gradient(ellipse 90% 70% at 50% 50%, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.4) 100%)
+          radial-gradient(ellipse 60% 40% at 50% 0%, rgba(180,120,50,0.04) 0%, transparent 70%),
+          radial-gradient(ellipse 90% 70% at 50% 50%, transparent 0%, rgba(0,0,0,0.15) 100%)
         `,
         pointerEvents: "none",
       }}/>
