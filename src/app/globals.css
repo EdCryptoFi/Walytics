@@ -44,7 +44,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--wood);
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-body);
   font-size: 17px;
@@ -55,33 +55,8 @@ html, body {
 
 /* ─────────────────────────  desk background  ─────────────── */
 .wood-desk {
-  background-color: #0f0c09;
-  /* CSS-only dark wood texture — no external image needed */
-  background-image:
-    /* warm lamp glow from top center */
-    radial-gradient(ellipse 70% 50% at 50% -5%, rgba(180,120,50,0.18) 0%, transparent 70%),
-    /* secondary warm spots */
-    radial-gradient(ellipse 40% 35% at 25% 15%, rgba(100,60,20,0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 45% 40% at 75% 10%, rgba(90,55,15,0.10) 0%, transparent 55%),
-    /* wood grain horizontal lines */
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px, transparent 2px,
-      rgba(80,50,20,0.04) 2px, rgba(80,50,20,0.04) 3px,
-      transparent 3px, transparent 8px,
-      rgba(40,25,10,0.03) 8px, rgba(40,25,10,0.03) 9px
-    ),
-    /* wood grain vertical variation */
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px, transparent 40px,
-      rgba(60,35,12,0.02) 40px, rgba(60,35,12,0.02) 41px
-    ),
-    /* subtle knot patterns */
-    radial-gradient(ellipse 8% 12% at 30% 60%, rgba(50,30,10,0.08) 0%, transparent 100%),
-    radial-gradient(ellipse 6% 10% at 70% 40%, rgba(45,28,8,0.06) 0%, transparent 100%),
-    radial-gradient(ellipse 10% 8% at 55% 80%, rgba(55,32,12,0.05) 0%, transparent 100%);
-  background-attachment: fixed;
+  /* transparent — beige base + noir photo come from DetectiveBackground */
+  background: transparent;
 }
 
 /* animated warm glow effect */
@@ -90,22 +65,13 @@ html, body {
   50%      { opacity: 1; }
 }
 .wood-desk::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(200,140,60,0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  animation: desk-glow 8s ease-in-out infinite;
+  /* disabled — glow now handled by DetectiveBackground */
+  display: none;
 }
 
-/* vignette overlay */
+/* vignette overlay — disabled, handled by DetectiveBackground */
 .fixed-bg-overlay {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, transparent 30%, rgba(0,0,0,0.7) 100%);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 /* pages sit transparently on the dark desk */
