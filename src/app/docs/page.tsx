@@ -15,17 +15,19 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
     title: "Architecture",
     kicker: "🏗️ How it's built",
     nodes: [
-      { label: "Frontend",    value: "Next.js 16 (App Router), CSS Custom Properties" },
-      { label: "Backend API", value: "Next.js API Routes (serverless)" },
-      { label: "Blockchain",  value: "Tatum Sui RPC (sui-mainnet.gateway.tatum.io)" },
-      { label: "AI Engine",   value: "Google Gemini 2.0 Flash" },
-      { label: "Storage",     value: "Walrus Protocol (decentralized blobs)" },
-      { label: "Deploy",      value: "Netlify (Next.js Runtime)" },
+      { label: "Frontend",    value: "Next.js 16 (App Router), Custom CSS, Recharts, Framer Motion" },
+      { label: "Backend API", value: "Next.js API Routes (serverless, Node.js runtime)" },
+      { label: "Blob Data",   value: "Blockberry API (same source as walruscan.com)" },
+      { label: "RPC / Health",value: "Tatum Sui RPC (health check + fallback indexer)" },
+      { label: "AI Engine",   value: "Google Gemini (gemini-2.5-flash-lite)" },
+      { label: "Storage",     value: "Walrus Protocol (snapshot write-back)" },
+      { label: "Deploy",      value: "Vercel" },
     ],
     flow: [
-      "User → Next.js App → API Routes → Tatum Sui RPC → Sui Blockchain",
-      "API Routes → Analytics Engine → Walrus Blob Storage (snapshots)",
-      "API Routes → Gemini AI → Chat responses & Reports",
+      "User → Next.js App → API Routes → Blockberry API → live Walrus blob data",
+      "API Routes → Tatum Sui RPC → health check + fallback indexing",
+      "API Routes → Gemini AI → chat responses & analytics reports",
+      "API Routes → Walrus Publisher → snapshot blobs stored on-chain",
     ],
   },
   {
@@ -45,10 +47,10 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
     title: "Tatum Integration",
     kicker: "🔗 On-chain data",
     details: [
-      "Endpoint: https://sui-mainnet.gateway.tatum.io",
-      "Auth: x-api-key header",
-      "Methods: sui_getLatestCheckpointSequenceNumber, suix_getOwnedObjects",
-      "Direct fetch wrapper (configured in src/lib/tatum.ts)",
+      "Health check: sui_getLatestCheckpointSequenceNumber — live indicator on dashboard (polls every 15s)",
+      "RPC proxy: /api/tatum endpoint with method whitelist + per-IP rate limiting",
+      "Fallback indexer: suix_queryEvents for BlobRegistered when Blockberry is unavailable",
+      "Endpoint: https://sui-mainnet.gateway.tatum.io (x-api-key auth)",
     ],
   },
   {
@@ -56,10 +58,10 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
     title: "Walrus Integration",
     kicker: "🦭 Decentralized storage",
     details: [
-      "Read: Query blob metadata from Walrus storage objects on Sui",
-      "Write: Analytics snapshots stored as Walrus blobs (dogfooding)",
-      "Storage types: permanent (70%) and ephemeral (30%)",
-      "Erasure code: redStuff (Walrus default)",
+      "Read: Live blob data via Blockberry API (same indexer as walruscan.com)",
+      "Write: Analytics snapshots stored as Walrus blobs — immutable, verifiable on walruscan.com",
+      "Dogfooding: Walytics analytics are archived on the very network they analyze",
+      "Erasure code: RS2 (RedStuff — Walrus default)",
     ],
   },
   {
@@ -67,10 +69,11 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
     title: "AI Features",
     kicker: "🤖 Holmes intelligence",
     details: [
-      "Model: Gemini 2.0 Flash (free tier, 1500 req/day)",
-      "Chat: Natural language queries about storage data",
-      "Reports: One-click weekly analytics summary",
-      "Context: Injects real-time metrics into each query",
+      "Model: gemini-2.5-flash-lite (free tier)",
+      "Chat: Natural language queries about live Walrus storage data",
+      "Reports: One-click analytics summary — archived as a Walrus blob on completion",
+      "Context: Real-time metrics injected into every query (Blockberry live data)",
+      "Character: Walytics Holmes — detective persona with Walruscan.com citation rules",
     ],
   },
   {
@@ -80,6 +83,7 @@ Built with Tatum's Sui RPC for on-chain data access and the Walrus protocol for 
     steps: [
       "Get Tatum API key at https://dashboard.tatum.io",
       "Get Gemini API key at https://aistudio.google.com",
+      "Get Blockberry API key at https://blockberry.one (for live blob data)",
       "Clone repo: git clone https://github.com/EdCryptoFi/Walytics",
       "Copy .env.local.example → .env.local and fill keys",
       "npm install && npm run dev",
@@ -179,7 +183,7 @@ export default function DocsPage() {
       <div className="brut" style={{ padding: "18px 22px", background: "var(--paper-2)", display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 22 }}>
         <a href="https://github.com/EdCryptoFi/Walytics" target="_blank" rel="noopener noreferrer"
            className="btn btn-primary" style={{ padding: "10px 16px", fontSize: 12 }}>GitHub Repo →</a>
-        <a href="https://walytics.netlify.app" target="_blank" rel="noopener noreferrer"
+        <a href="https://walytics-dash.vercel.app" target="_blank" rel="noopener noreferrer"
            className="btn btn-mint" style={{ padding: "10px 16px", fontSize: 12 }}>Live Demo →</a>
         <a href="/tutorial" className="btn" style={{ padding: "10px 16px", fontSize: 12 }}>Tutorial →</a>
       </div>
