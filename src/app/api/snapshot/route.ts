@@ -10,6 +10,8 @@ const WALRUS_PUBLISHERS = [
   process.env.WALRUS_PUBLISHER_URL,
   "https://walrus-mainnet-publisher-1.staketab.org:443",
   "https://publisher.walrus-mainnet.mystenlabs.com",
+  // testnet fallback — free, always available, blobs verified on walruscan.com/testnet/
+  "https://publisher.walrus-testnet.walrus.space",
 ].filter(Boolean) as string[]
 
 interface WalrusResult {
