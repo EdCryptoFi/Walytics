@@ -1,49 +1,15 @@
 "use client"
 
-import { useState } from "react"
-
-interface SnapshotResult {
-  blobId: string | null
-  network: "mainnet" | "testnet" | null
-  walruscanUrl: string | null
-  walrusStatus?: "stored" | "pending"
-  metricsSummary: { totalBlobs: number; totalSize: number; uniquePublishers: number }
-}
+import { useSaveSnapshot } from "@/hooks/useSaveSnapshot"
 
 export function SaveToWalrus() {
-  const [state, setState] = useState<"idle" | "loading" | "success" | "error">("idle")
-  const [result, setResult] = useState<SnapshotResult | null>(null)
-  const [errorMsg, setErrorMsg] = useState<string | null>(null)
-
-  async function handleSave() {
-    if (state === "loading") return
-    setState("loading")
-    setResult(null)
-    setErrorMsg(null)
-
-    try {
-      const res = await fetch("/api/snapshot", { method: "POST" })
-      const data = await res.json()
-
-      if (!res.ok || !data.success) {
-        setErrorMsg(data.error ?? "Unknown error")
-        setState("error")
-        return
-      }
-
-      setResult({ ...data.snapshot, walrusStatus: data.walrusStatus })
-      setState("success")
-    } catch (e) {
-      setErrorMsg(e instanceof Error ? e.message : "Network error")
-      setState("error")
-    }
-  }
+  const { state, result, errorMsg, save } = useSaveSnapshot()
 
   return (
     <div style={{ marginTop: 20 }}>
       <button
         className="btn"
-        onClick={handleSave}
+        onClick={save}
         disabled={state === "loading"}
         style={{
           display: "flex", alignItems: "center", gap: 8,
@@ -57,7 +23,6 @@ export function SaveToWalrus() {
         {state === "loading" ? "STORING ON WALRUS…" : state === "success" ? "SNAPSHOT STORED" : "SAVE SNAPSHOT TO WALRUS"}
       </button>
 
-      {/* Success card */}
       {state === "success" && result && (
         <div
           className="animate-on-load"
@@ -116,7 +81,6 @@ export function SaveToWalrus() {
         </div>
       )}
 
-      {/* Error card */}
       {state === "error" && (
         <div style={{
           marginTop: 12,
@@ -131,7 +95,7 @@ export function SaveToWalrus() {
           <div className="mono" style={{ fontSize: 10, opacity: 0.7 }}>{errorMsg}</div>
           <button
             className="mono"
-            onClick={handleSave}
+            onClick={save}
             style={{ marginTop: 8, fontSize: 9.5, textDecoration: "underline", background: "none", border: "none", cursor: "pointer", padding: 0 }}
           >
             RETRY

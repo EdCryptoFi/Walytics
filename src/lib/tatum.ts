@@ -1,7 +1,12 @@
 const TATUM_API_KEY = process.env.TATUM_API_KEY || ""
 const SUI_RPC_URL = "https://sui-mainnet.gateway.tatum.io"
+const REQUEST_TIMEOUT_MS = 10_000
 
 export async function tatumRpcCall<T>(method: string, params: unknown[] = []): Promise<T> {
+  if (!TATUM_API_KEY) {
+    throw new Error("TATUM_API_KEY is not configured")
+  }
+
   const res = await fetch(SUI_RPC_URL, {
     method: "POST",
     headers: {
@@ -14,6 +19,7 @@ export async function tatumRpcCall<T>(method: string, params: unknown[] = []): P
       method,
       params,
     }),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   })
 
   if (!res.ok) {

@@ -45,6 +45,7 @@ const ROUTE_LIMITS: Record<string, RateLimitConfig> = {
 
 export interface RateLimitResult {
   allowed: boolean
+  limit: number
   remaining: number
   resetAt: number
   retryAfter?: number
@@ -58,18 +59,19 @@ export function checkRateLimit(
   cleanup()
 
   const config = ROUTE_LIMITS[route] || DEFAULT_CONFIG
-  const key = getClientKey(ip, identifier)
+  const key = `${route}:${getClientKey(ip, identifier)}`
   const now = Date.now()
 
   const entry = windows.get(key)
   if (!entry || now >= entry.resetAt) {
     windows.set(key, { count: 1, resetAt: now + config.windowMs })
-    return { allowed: true, remaining: config.maxRequests - 1, resetAt: now + config.windowMs }
+    return { allowed: true, limit: config.maxRequests, remaining: config.maxRequests - 1, resetAt: now + config.windowMs }
   }
 
   if (entry.count >= config.maxRequests) {
     return {
       allowed: false,
+      limit: config.maxRequests,
       remaining: 0,
       resetAt: entry.resetAt,
       retryAfter: Math.ceil((entry.resetAt - now) / 1000),
@@ -77,12 +79,12 @@ export function checkRateLimit(
   }
 
   entry.count++
-  return { allowed: true, remaining: config.maxRequests - entry.count, resetAt: entry.resetAt }
+  return { allowed: true, limit: config.maxRequests, remaining: config.maxRequests - entry.count, resetAt: entry.resetAt }
 }
 
 export function rateLimitHeaders(result: RateLimitResult): Record<string, string> {
   return {
-    "X-RateLimit-Limit": String(result.remaining + (result.allowed ? 1 : 0)),
+    "X-RateLimit-Limit": String(result.limit),
     "X-RateLimit-Remaining": String(result.remaining),
     "X-RateLimit-Reset": String(Math.ceil(result.resetAt / 1000)),
     ...(result.retryAfter ? { "Retry-After": String(result.retryAfter) } : {}),

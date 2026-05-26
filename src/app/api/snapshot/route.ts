@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getAggregatedMetrics } from "@/lib/walrus"
 import { checkRateLimit, rateLimitHeaders } from "@/lib/rate-limit"
 import { logger } from "@/lib/logger"
+import { validateBody, ValidationError } from "@/lib/validation"
 import { getClientIp } from "@/lib/request-utils"
 
 export const runtime = "nodejs"
@@ -76,10 +77,24 @@ export async function POST(req: NextRequest) {
 
   try {
     let reportText: string | undefined
-    try {
-      const body = await req.json().catch(() => ({}))
-      if (typeof body?.reportText === "string") reportText = body.reportText
-    } catch { /* body is optional */ }
+    const contentType = req.headers.get("content-type") || ""
+    if (contentType.includes("application/json")) {
+      try {
+        const body = await req.json()
+        const validated = validateBody<{ reportText?: string }>(body, {
+          reportText: { type: "string", required: false, maxLength: 10_000, sanitize: true },
+        })
+        reportText = validated.reportText
+      } catch (err) {
+        if (err instanceof ValidationError) {
+          return NextResponse.json(
+            { error: err.message },
+            { status: 400, headers: rateLimitHeaders(limit) }
+          )
+        }
+        // Non-JSON or empty body — treat as no reportText
+      }
+    }
 
     const metrics = await getAggregatedMetrics()
 

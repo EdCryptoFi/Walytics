@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
+
+export const runtime = "nodejs"
 import { checkRateLimit, rateLimitHeaders } from "@/lib/rate-limit"
 import { logger } from "@/lib/logger"
 import { validateBody, ValidationError } from "@/lib/validation"
