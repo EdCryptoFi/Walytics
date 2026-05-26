@@ -9,6 +9,7 @@ import { BlobModal } from "@/components/Explorer/BlobModal";
 import { Inspector } from "@/components/Explorer/Inspector";
 import { motion } from "framer-motion";
 import { formatBytes } from "@/lib/utils";
+import { DataSourceBadge } from "@/components/UI/DataSourceBadge";
 import type { BlobInfo } from "@/types";
 import type { CSSProperties } from "react";
 
@@ -166,7 +167,7 @@ function BlobCard({ blob, idx, onClick, onAnalyze, active }: { blob: BlobInfo; i
 }
 
 export default function ExplorerPage() {
-  const { blobs, loading } = useBlobs();
+  const { blobs, loading, isReal, lastUpdated } = useBlobs();
   const { toggle: toggleFlashlight } = useFlashlight();
 
   const [q, setQ]           = useState("");
@@ -257,6 +258,7 @@ export default function ExplorerPage() {
                   <span className="material-symbols-outlined" style={{ fontSize: 18 }}>flashlight_on</span>
                   Investigate
                 </button>
+                <DataSourceBadge isReal={isReal} lastUpdated={lastUpdated} pollInterval={30} loading={loading}/>
                 <span className="mono" style={{ fontSize: 8, opacity: 0.35, letterSpacing: "0.12em" }}>
                   {filtered.length} ITEMS IN EVIDENCE
                 </span>

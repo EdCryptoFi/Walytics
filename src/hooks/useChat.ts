@@ -75,24 +75,50 @@ export function useChat(): UseChatReturn {
 
   async function handleGenerateReport() {
     setGeneratingReport(true)
+    // Show user intent in chat
+    setMessages((prev) => [...prev, { role: "user", content: "Generate a full analytics report and archive it on Walrus." }])
+
     try {
-      const res = await fetch("/api/chat", {
+      // Step 1: get Holmes report from Gemini
+      const chatRes = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: "Generate a report", generateReport: true }),
       })
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: "Report generation failed" }))
-        throw new Error(err.error || `HTTP ${res.status}`)
+      if (!chatRes.ok) {
+        const err = await chatRes.json().catch(() => ({ error: "Report generation failed" }))
+        throw new Error(err.error || `HTTP ${chatRes.status}`)
       }
+      const chatData = await chatRes.json()
+      const reportText: string = chatData.response
 
-      const data = await res.json()
+      // Step 2: archive report + metrics on Walrus
+      let walrusProof = ""
+      try {
+        const snapRes = await fetch("/api/snapshot", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reportText }),
+        })
+        if (snapRes.ok) {
+          const snapData = await snapRes.json()
+          if (snapData.success) {
+            if (snapData.walrusStatus === "stored" && snapData.snapshot?.blobId) {
+              const { blobId, walruscanUrl, network } = snapData.snapshot
+              const shortId = String(blobId).slice(0, 16) + "…"
+              walrusProof = `\n\n---\n*Archived on Walrus ${network} · Blob \`${shortId}\` · [Verify on Walruscan](${walruscanUrl})*`
+            } else if (snapData.walrusStatus === "pending") {
+              walrusProof = `\n\n---\n*Snapshot prepared · Walrus on-chain storage requires WAL token setup*`
+            }
+          }
+        }
+      } catch { /* non-fatal — report still shown */ }
+
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: `**Weekly Analytics Report**\n\n${data.response}`,
+          content: `**Weekly Analytics Report**\n\n${reportText}${walrusProof}`,
         },
       ])
     } catch (e) {

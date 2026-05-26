@@ -8,7 +8,7 @@ if (!GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
 
-const GEMINI_MODEL = "gemini-2.5-flash"
+const GEMINI_MODEL = "gemini-2.5-flash-lite"
 
 async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Promise<T> {
   for (let i = 0; i <= retries; i++) {
@@ -25,12 +25,15 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 1000): Pr
 }
 
 const WALRUSCAN_INSTRUCTIONS = `
-IMPORTANT — Walruscan link formatting rules:
-- When referencing a specific blob by its ID, ALWAYS include a clickable link: https://walruscan.com/blob/{blob_id}
-  Example: [View Blob](https://walruscan.com/blob/abc123def456)
-- When referencing a publisher by their address, ALWAYS include a clickable link: https://walruscan.com/account/{publisher_address}
-  Example: [View Publisher](https://walruscan.com/account/0x1234...abcd)
+IMPORTANT — Walruscan link formatting rules (EXACT URL FORMAT — do not deviate):
+- Blob link format: https://walruscan.com/blob/{blob_id}   (NO /mainnet/ prefix)
+  Correct example: [View Blob](https://walruscan.com/blob/abc123def456)
+  Wrong example: https://walruscan.com/mainnet/blob/... ← NEVER USE THIS
+- Publisher link format: https://walruscan.com/account/{publisher_address}   (NO /mainnet/ prefix)
+  Correct example: [View Publisher](https://walruscan.com/account/0x1234abcd)
+  Wrong example: https://walruscan.com/mainnet/account/... ← NEVER USE THIS
 - Never show a blob ID or publisher address without its corresponding walruscan.com link.
+- Never add /mainnet/, /testnet/, or any network prefix to walruscan.com URLs.
 `
 
 export async function chatWithContext(

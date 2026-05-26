@@ -14,7 +14,7 @@ import { RandomCharacter } from "@/components/UI/RandomCharacter";
 import type { CSSProperties } from "react";
 
 export default function ChatPage() {
-  const { messages, loading, handleSend } = useChat();
+  const { messages, loading, handleSend, handleGenerateReport, generatingReport } = useChat();
   const { animations } = useTheme();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -112,12 +112,33 @@ export default function ChatPage() {
                 padding: "10px 20px",
                 background: "var(--ink)", color: "var(--tusk)",
                 display: "flex", justifyContent: "space-between", alignItems: "center",
+                flexWrap: "wrap", gap: 8,
               }}>
                 <div className="mono" style={{ fontSize: 11, letterSpacing: "0.12em", fontWeight: 700 }}>
                   ● INTERROGATION: SUI_NETWORK_ANALYST
                 </div>
-                <div className="mono" style={{ fontSize: 10, opacity: 0.55 }}>
-                  {messages.length} EXCHANGES
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <button
+                    onClick={handleGenerateReport}
+                    disabled={generatingReport || loading}
+                    className="mono"
+                    style={{
+                      fontSize: 9.5, letterSpacing: "0.1em", fontWeight: 700,
+                      background: generatingReport ? "rgba(255,255,255,0.1)" : "var(--gold)",
+                      color: "var(--ink)", border: "1.5px solid var(--tusk)",
+                      padding: "4px 10px", cursor: generatingReport ? "wait" : "pointer",
+                      display: "flex", alignItems: "center", gap: 5,
+                      opacity: (generatingReport || loading) ? 0.6 : 1,
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: 12 }}>
+                      {generatingReport ? "sync" : "summarize"}
+                    </span>
+                    {generatingReport ? "FILING REPORT…" : "GENERATE REPORT"}
+                  </button>
+                  <div className="mono" style={{ fontSize: 10, opacity: 0.55 }}>
+                    {messages.length} EXCHANGES
+                  </div>
                 </div>
               </div>
 

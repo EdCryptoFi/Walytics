@@ -2,8 +2,57 @@ import type { BlobInfo, WalrusMetrics } from "@/types"
 import { tatumRpcCall } from "@/lib/tatum"
 
 const WALRUS_PACKAGE = process.env.WALRUS_PACKAGE_ID || ""
+const BLOCKBERRY_API_KEY = process.env.BLOCKBERRY_API_KEY || ""
+const BLOCKBERRY_BASE = "https://api.blockberry.one/walrus-mainnet/v1"
 
-// ── Real data fetching via Tatum Sui RPC (suix_queryEvents) ──────
+// ── Blockberry API (primary — same source as walruscan.com) ──────
+
+interface BlockberryBlob {
+  blobId: string          // numeric string (decimal)
+  blobIdBase64: string    // base64url — used in walruscan.com URLs
+  objectId: string        // Sui object ID of the blob (owner = publisher)
+  status: string
+  size: number
+  timestamp: number       // milliseconds
+  startEpoch: number
+  endEpoch: number
+  isQuilt: boolean
+}
+
+async function fetchBlobsFromBlockberry(limit: number): Promise<BlobInfo[] | null> {
+  if (!BLOCKBERRY_API_KEY) return null
+
+  try {
+    const pageSize = Math.min(limit, 100)
+    const res = await fetch(
+      `${BLOCKBERRY_BASE}/blobs?page=0&size=${pageSize}&sortBy=TIMESTAMP&orderBy=DESC`,
+      {
+        headers: { "X-API-KEY": BLOCKBERRY_API_KEY },
+        signal: AbortSignal.timeout(12_000),
+      }
+    )
+    if (!res.ok) return null
+
+    const json = await res.json()
+    const items: BlockberryBlob[] = json.content ?? []
+    if (!Array.isArray(items) || items.length === 0) return null
+
+    return items.map((b) => ({
+      id: b.blobIdBase64 ?? b.blobId,
+      publisher: b.objectId ?? "unknown",
+      size: Number(b.size ?? 0),
+      storageType: "RedStuff",
+      timestamp: b.timestamp ? Math.floor(b.timestamp / 1000) : Math.floor(Date.now() / 1000),
+      digest: b.blobId ?? "",
+      erasureCodeType: "redStuff",
+    }))
+  } catch (err) {
+    console.warn("[Walrus] Blockberry fetch failed:", String(err))
+    return null
+  }
+}
+
+// ── Tatum Sui RPC fallback (suix_queryEvents) ────────────────────
 
 interface SuiEvent {
   id: { txDigest: string; eventSeq: string }
@@ -135,10 +184,17 @@ const mockBlobs = generateMockBlobs(500)
 export async function queryWalrusBlobs(
   _cursor?: string,
   limit = 50
-): Promise<{ blobs: BlobInfo[]; nextCursor?: string }> {
+): Promise<{ blobs: BlobInfo[]; nextCursor?: string; isReal: boolean }> {
+  // 1. Blockberry (same source as walruscan.com — most reliable)
+  const blockberry = await fetchBlobsFromBlockberry(limit)
+  if (blockberry && blockberry.length > 0) {
+    return { blobs: blockberry, isReal: true }
+  }
+
+  // 2. Tatum suix_queryEvents fallback
   const real = await fetchRealBlobs(limit)
   if (real && real.length > 0) {
-    return { blobs: real }
+    return { blobs: real, isReal: true }
   }
 
   // mock fallback
@@ -147,15 +203,24 @@ export async function queryWalrusBlobs(
   return {
     blobs: mockBlobs.slice(start, end),
     nextCursor: end < mockBlobs.length ? String(end) : undefined,
+    isReal: false,
   }
 }
 
-export async function getAggregatedMetrics(): Promise<WalrusMetrics> {
+export async function getAggregatedMetrics(): Promise<WalrusMetrics & { isReal: boolean }> {
+  // 1. Blockberry
+  const blockberryBlobs = await fetchBlobsFromBlockberry(200)
+  if (blockberryBlobs && blockberryBlobs.length > 0) {
+    return { ...computeMetrics(blockberryBlobs), isReal: true }
+  }
+
+  // 2. Tatum fallback
   const real = await fetchRealMetrics()
   if (real && real.totalBlobs && real.totalBlobs > 0) {
-    return real as WalrusMetrics
+    return { ...(real as WalrusMetrics), isReal: true }
   }
-  return computeMetrics(mockBlobs)
+
+  return { ...computeMetrics(mockBlobs), isReal: false }
 }
 
 // ── Compute ──────────────────────────────────────────────────────

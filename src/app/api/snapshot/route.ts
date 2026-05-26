@@ -4,6 +4,60 @@ import { checkRateLimit, rateLimitHeaders } from "@/lib/rate-limit"
 import { logger } from "@/lib/logger"
 import { getClientIp } from "@/lib/request-utils"
 
+export const runtime = "nodejs"
+
+const WALRUS_PUBLISHERS = [
+  process.env.WALRUS_PUBLISHER_URL,
+  "https://walrus-mainnet-publisher-1.staketab.org:443",
+  "https://publisher.walrus-mainnet.mystenlabs.com",
+].filter(Boolean) as string[]
+
+interface WalrusResult {
+  blobId: string
+  network: "mainnet" | "testnet"
+  walruscanUrl: string
+}
+
+async function storeOnWalrus(data: object): Promise<WalrusResult | null> {
+  const body = Buffer.from(JSON.stringify(data, null, 2), "utf-8")
+
+  for (const publisherBase of WALRUS_PUBLISHERS) {
+    try {
+      const res = await fetch(`${publisherBase}/v1/blobs?epochs=1`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/octet-stream" },
+        body,
+        signal: AbortSignal.timeout(12_000),
+      })
+
+      if (!res.ok) {
+        logger.warn("[Walrus] Publisher returned non-OK", { metadata: { publisher: publisherBase, status: res.status } })
+        continue
+      }
+
+      const json = await res.json()
+      const blobId: string | undefined =
+        json?.newlyCreated?.blobObject?.blobId ||
+        json?.alreadyCertified?.blobId
+
+      if (!blobId) continue
+
+      const isTestnet = publisherBase.includes("testnet")
+      return {
+        blobId,
+        network: isTestnet ? "testnet" : "mainnet",
+        walruscanUrl: isTestnet
+          ? `https://walruscan.com/testnet/blob/${blobId}`
+          : `https://walruscan.com/blob/${blobId}`,
+      }
+    } catch (err) {
+      logger.warn("[Walrus] Publisher attempt failed", { metadata: { publisher: publisherBase }, error: String(err) })
+    }
+  }
+
+  return null
+}
+
 export async function POST(req: NextRequest) {
   const start = Date.now()
   const ip = getClientIp(req)
@@ -19,37 +73,78 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    let reportText: string | undefined
+    try {
+      const body = await req.json().catch(() => ({}))
+      if (typeof body?.reportText === "string") reportText = body.reportText
+    } catch { /* body is optional */ }
+
     const metrics = await getAggregatedMetrics()
 
-    const blobId = `0x${Array.from({ length: 64 }, () =>
-      Math.floor(Math.random() * 16).toString(16)
-    ).join("")}`
-
-    const snapshot = {
-      id: `snap-${Date.now()}`,
-      timestamp: Math.floor(Date.now() / 1000),
-      metrics,
-      blobId,
-      walrusStoreUrl:
-        "https://walrus-testnet-publisher.mystenlabs.com/v1/store?epoch=0",
+    const payload = {
+      walytics_snapshot: true,
+      version: "1.0",
+      generatedAt: new Date().toISOString(),
+      network: "sui-mainnet",
+      ...(reportText ? { aiReport: reportText } : {}),
+      metrics: {
+        totalBlobs: metrics.totalBlobs,
+        totalSize: metrics.totalSize,
+        uniquePublishers: metrics.uniquePublishers,
+        avgBlobSize: metrics.avgBlobSize,
+        topPublishers: metrics.topPublishers.slice(0, 5),
+        blobsOverTime: metrics.blobsOverTime,
+        sizeDistribution: metrics.sizeDistribution,
+      },
     }
 
-    logger.info("Snapshot created", {
+    const walrus = await storeOnWalrus(payload)
+
+    logger.info("Snapshot attempt completed", {
       route,
       ip,
       duration: Date.now() - start,
-      metadata: { snapshotId: snapshot.id, blobId },
+      metadata: { blobId: walrus?.blobId ?? "none", network: walrus?.network ?? "failed" },
     })
+
+    const snapshotId = `snap-${Date.now()}`
+    const timestamp = Math.floor(Date.now() / 1000)
+
+    if (!walrus) {
+      // No publisher available — return snapshot ready but not yet on-chain
+      return NextResponse.json(
+        {
+          success: true,
+          walrusStatus: "pending",
+          message: "Snapshot prepared. Walrus write requires WAL token configuration (WALRUS_PUBLISHER_URL).",
+          snapshot: {
+            id: snapshotId,
+            timestamp,
+            blobId: null,
+            network: null,
+            walruscanUrl: null,
+            metricsSummary: {
+              totalBlobs: metrics.totalBlobs,
+              totalSize: metrics.totalSize,
+              uniquePublishers: metrics.uniquePublishers,
+            },
+          },
+        },
+        { headers: rateLimitHeaders(limit) }
+      )
+    }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Analytics snapshot stored on Walrus",
+        walrusStatus: "stored",
+        message: `Analytics snapshot stored on Walrus ${walrus.network}`,
         snapshot: {
-          id: snapshot.id,
-          timestamp: snapshot.timestamp,
-          blobId: snapshot.blobId,
-          blobUrl: `https://aggregator.walrus-testnet.mystenlabs.com/v1/${snapshot.blobId}`,
+          id: snapshotId,
+          timestamp,
+          blobId: walrus.blobId,
+          network: walrus.network,
+          walruscanUrl: walrus.walruscanUrl,
           metricsSummary: {
             totalBlobs: metrics.totalBlobs,
             totalSize: metrics.totalSize,
@@ -67,7 +162,7 @@ export async function POST(req: NextRequest) {
       duration: Date.now() - start,
     })
     return NextResponse.json(
-      { error: "Failed to store snapshot" },
+      { error: "Failed to generate snapshot" },
       { status: 500, headers: rateLimitHeaders(limit) }
     )
   }

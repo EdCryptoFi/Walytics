@@ -3,16 +3,22 @@
 import { useEffect, useState } from "react"
 import type { BlobInfo } from "@/types"
 
+const POLL_INTERVAL = 30_000 // 30s
+
 export interface UseBlobsReturn {
   blobs: BlobInfo[]
   loading: boolean
   error: string | null
+  isReal: boolean
+  lastUpdated: Date | null
 }
 
 export function useBlobs(): UseBlobsReturn {
   const [blobs, setBlobs] = useState<BlobInfo[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isReal, setIsReal] = useState(false)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -28,22 +34,24 @@ export function useBlobs(): UseBlobsReturn {
         if (!cancelled) {
           if (data.blobs && Array.isArray(data.blobs)) {
             setBlobs(data.blobs)
+            setIsReal(data.isReal === true)
+            setLastUpdated(new Date())
+            setError(null)
           } else {
             setError("No blob data available")
           }
         }
       } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Failed to load blobs")
-        }
+        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to load blobs")
       } finally {
         if (!cancelled) setLoading(false)
       }
     }
 
     fetchBlobs()
-    return () => { cancelled = true }
+    const timer = setInterval(fetchBlobs, POLL_INTERVAL)
+    return () => { cancelled = true; clearInterval(timer) }
   }, [])
 
-  return { blobs, loading, error }
+  return { blobs, loading, error, isReal, lastUpdated }
 }

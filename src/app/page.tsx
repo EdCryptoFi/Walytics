@@ -11,7 +11,9 @@ import { BlobTimeline } from "@/components/Dashboard/BlobTimeline";
 import { SizeDistribution } from "@/components/Dashboard/SizeDistribution";
 import { TopPublishers } from "@/components/Dashboard/TopPublishers";
 import { QuickActions } from "@/components/Dashboard/QuickActions";
+import { SaveToWalrus } from "@/components/Dashboard/SaveToWalrus";
 import { RandomCharacter } from "@/components/UI/RandomCharacter";
+import { DataSourceBadge } from "@/components/UI/DataSourceBadge";
 import { motion } from "framer-motion";
 import { formatBytes } from "@/lib/utils";
 import Link from "next/link";
@@ -40,7 +42,7 @@ function FolderTab() {
 
 
 export default function DashboardPage() {
-  const { metrics, loading } = useAnalytics();
+  const { metrics, loading, isReal, lastUpdated } = useAnalytics();
   const { animations } = useTheme();
   const { toggle: toggleFlashlight } = useFlashlight();
 
@@ -64,6 +66,11 @@ export default function DashboardPage() {
       </div>
 
       <div className="container" style={{ paddingTop: 0, position: "relative", zIndex: 1 }}>
+
+        {/* Data source indicator */}
+        <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: 12, paddingBottom: 4 }}>
+          <DataSourceBadge isReal={isReal} lastUpdated={lastUpdated} pollInterval={60} loading={loading}/>
+        </div>
 
         {/* Hero dossier — with character on right */}
         <div
@@ -354,6 +361,7 @@ export default function DashboardPage() {
               <span className="material-symbols-outlined" style={{ fontSize: 18 }}>search_insights</span>
               Investigate
             </button>
+            <SaveToWalrus/>
           </div>
 
         </div>
