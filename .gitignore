@@ -48,8 +48,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Local Netlify folder
-.netlify
 
 # Marketing / production assets (local only)
 mkt/
