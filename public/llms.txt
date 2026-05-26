@@ -33,5 +33,5 @@ Key features include:
 Walytics was built as a hackathon project to provide visibility into the Walrus decentralized storage network. Walrus is a protocol on Sui that enables cost-efficient, resilient blob storage for Web3 applications. Walytics surfaces on-chain analytics in a way that is accessible and visually engaging.
 
 ## Links
-- Production: https://walytics.vercel.app
-- Sitemap: https://walytics.vercel.app/sitemap.xml
+- Production: https://walytics-dash.vercel.app
+- Sitemap: https://walytics-dash.vercel.app/sitemap.xml
